@@ -65,7 +65,15 @@ instalar_paquete() {
         echo "=========================================="
         echo " Instalando el paquete: $pkg_name"
         echo "=========================================="
-        $PKG_MAN "$pkg_name"
+        if command -v pacman &> /dev/null; then
+    pacman -S --noconfirm "$pkg_name"
+elif command -v pkg &> /dev/null; then
+    pkg install -y "$pkg_name"
+elif command -v sudo &> /dev/null; then
+    sudo apt update && sudo apt install -y "$pkg_name"
+else
+    apt install -y "$pkg_name"
+fi
         echo ""
         read -p "Instalación completada. Presiona Enter para continuar..."
         $DIALOG_CMD --title "Estado de Instalación" --msgbox "\n ¡La instalación de '$pkg_name' finalizó correctamente!" 8 55
