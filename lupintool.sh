@@ -1,5 +1,14 @@
 #!/bin/bash
-
+# Detección de gestor de paquetes
+if command -v pacman &> /dev/null; then
+    PKG_MAN="pacman -S --noconfirm"
+elif command -v pkg &> /dev/null; then
+    PKG_MAN="pkg install -y"
+elif command -v sudo &> /dev/null; then
+    PKG_MAN="sudo apt update && sudo apt install -y"
+else
+    PKG_MAN="apt install -y"
+fi
 # ==========================================
 # LUPINTOOL - MENÚ MULTIHERRAMIENTAS COMPLETO
 # Sombra / Mouse / Flechas activados
