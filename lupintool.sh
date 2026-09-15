@@ -27,6 +27,33 @@ fi
 # Configuración de Dialog con soporte nativo de MOUSE y FLECHAS
 DIALOG_CMD="dialog --mouse --clear --shadow"
 
+# Función de búsqueda web
+buscar_web() {
+    BUSQUEDA=$($DIALOG_CMD --title "Lupintool - Buscador Web" \
+        --inputbox "\nEscribí lo que querés buscar en Internet:" 10 60 \
+        3>&1 1>&2 2>&3)
+
+    if [ -n "$BUSQUEDA" ]; then
+        query_encoded=$(echo "$BUSQUEDA" | sed 's/ /+/g')
+        url="https://html.duckduckgo.com/html/?q=${query_encoded}"
+
+        clear
+        echo "=========================================="
+        echo " Abriendo resultados para: $BUSQUEDA"
+        echo "=========================================="
+        
+        if command -v termux-open-url &> /dev/null; then
+            termux-open-url "$url"
+        elif command -v xdg-open &> /dev/null; then
+            xdg-open "$url"
+        else
+            echo "Abre este enlace en tu navegador: $url"
+        fi
+        echo ""
+        read -p "Presiona Enter para regresar al menú de Lupintool..."
+    fi
+}
+
 # Función universal de instalación
 instalar_paquete() {
     local cmd_check="$1"
@@ -579,13 +606,14 @@ menu_diversion() {
 menu_principal() {
     while true; do
         CATEGORIA=$($DIALOG_CMD --title "=== LUPINTOOL CLI ===" \
-            --menu "Elige una categoría con las FLECHAS / MOUSE y presiona ENTER:" 18 65 8 \
+            --menu "Elige una categoría con las FLECHAS / MOUSE y presiona ENTER:" 20 65 9 \
             "1" "Audio, Video y Multimedia" \
             "2" "Redes, Servidores y Web" \
             "3" "Utilidades y Sistema" \
             "4" "Programación y Desarrollo" \
             "5" "Hacking y Ciberseguridad" \
             "6" "Juegos y Efectos de Terminal" \
+            "7" "Buscador Web (Buscar en Internet)" \
             "0" "Salir de Lupintool" \
             3>&1 1>&2 2>&3)
 
@@ -596,6 +624,7 @@ menu_principal() {
             4) menu_programacion ;;
             5) menu_seguridad ;;
             6) menu_diversion ;;
+            7) buscar_web ;;
             0) clear; echo "¡Gracias por usar Lupintool!"; exit 0 ;;
             *) exit 0 ;;
         esac
@@ -603,4 +632,3 @@ menu_principal() {
 }
 
 menu_principal
-
