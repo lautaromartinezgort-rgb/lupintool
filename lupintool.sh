@@ -1,4 +1,3 @@
-cat << 'EOF' > ~/Lupintool/lupintool.sh
 #!/bin/bash
 
 # ====================================================
@@ -171,4 +170,3 @@ while true; do
         0|*) clear; echo "¡Gracias por usar Lupintool v5.0!"; exit 0 ;;
     esac
 done
-EOF
