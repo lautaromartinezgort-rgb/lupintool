@@ -1,666 +1,298 @@
-cat << 'EOF' > ~/Lupintool/lupintool.sh
 #!/bin/bash
 
-# ====================================================
-# LUPINTOOL v6.0 - MEGA CATALOG EDITION
-# Menú interactivo con catálogo masivo de herramientas
-# ====================================================
+# Colores y estilo PC XT (Texto gris/verde sobre fondo negro)
+XT_BG="\e[40m"
+XT_FG="\e[37m"
+XT_GREEN="\e[32m"
+XT_BOLD="\e[1m"
+RESET="\e[0m"
 
-if command -v pkg &> /dev/null; then
-    PKG_MAN="pkg install -y"
-elif command -v apt &> /dev/null; then
-    PKG_MAN="sudo apt install -y"
-elif command -v pacman &> /dev/null; then
-    PKG_MAN="sudo pacman -S --noconfirm"
-elif command -v dnf &> /dev/null; then
-    PKG_MAN="sudo dnf install -y"
-else
-    PKG_MAN="echo 'Gestor de paquetes no detectado.'"
-fi
-
-for dep in dialog python3 curl git; do
-    if ! command -v $dep &> /dev/null; then
-        $PKG_MAN $dep
-    fi
-done
-
-DIALOG_CMD="dialog --mouse --clear --shadow"
-
-# ====================================================
-# FUNCIONES DE INSTALACIÓN Y EJECUCIÓN
-# ====================================================
-instalar_paquete() {
-    local cmd_check="$1"
-    local pkg_name="$2"
-    if command -v "$cmd_check" &> /dev/null; then
-        $DIALOG_CMD --title "Estado" --msgbox "\n El comando '$cmd_check' ya está instalado en tu sistema." 7 55
-    else
-        clear
-        echo "=========================================="
-        echo " Instalando paquete: $pkg_name"
-        echo "=========================================="
-        $PKG_MAN "$pkg_name"
-        read -p "Instalación completada. Presioná Enter..."
-    fi
+# Función para pausar
+pausa() {
+    echo -e "\n${XT_FG}Presione [ENTER] para volver al menú...${RESET}"
+    read -r
 }
 
-ejecutar_programa() {
-    local cmd_check="$1"
-    shift
-    local run_cmd="$@"
-    if ! command -v "$cmd_check" &> /dev/null; then
-        $DIALOG_CMD --title "Atención" --msgbox "\n El programa '$cmd_check' NO está instalado.\nElegí primero la opción de INSTALAR." 8 55
-    else
-        clear
-        echo "=========================================="
-        echo " Ejecutando: $cmd_check"
-        echo "=========================================="
-        $run_cmd
-        echo ""
-        read -p "Presioná Enter para regresar al menú..."
-    fi
+# Función inteligente para descargar repositorios de GitHub
+instalar_repo() {
+    echo -e "\n${XT_GREEN}>>> Descargando $1...${RESET}"
+    git clone "$2"
+    echo -e "${XT_FG}>>> ¡$1 descargado! Busca la carpeta con 'ls'.${RESET}"
+    pausa
 }
 
-# ====================================================
-# MÓDULO PAINT CLI
-# ====================================================
-modo_paint() {
-    local ARCHIVO_DIBUJO="$HOME/dibujo_lupintool.txt"
-    local ANCHO=30
-    local ALTO=12
-    local PINCEL="█"
-    
-    declare -A CANVA
-    limpiar_lienzo() {
-        for ((y=0; y<ALTO; y++)); do
-            for ((x=0; x<ANCHO; x++)); do CANVA["$x,$y"]=" "; done
-        done
-    }
-    limpiar_lienzo
+# Diccionario de comandos
+glosario_comandos() {
+    clear
+    echo -e "${XT_GREEN}======================================================================${RESET}"
+    echo -e "${XT_BOLD}                   MANUAL DE COMANDOS DEL SISTEMA                     ${RESET}"
+    echo -e "${XT_GREEN}======================================================================${RESET}"
+    echo -e "${XT_FG}"
+    echo "  ls            Lista los archivos de la carpeta actual."
+    echo "  cd [ruta]     Cambia de directorio (ej. cd /home)."
+    echo "  rm -rf [dir]  Borra una carpeta entera con su contenido."
+    echo "  chmod +x      Da permisos de ejecución a un script (.sh)."
+    echo "  dpkg -i       Instala un archivo local .deb."
+    echo "  apt search    Busca un paquete en los repositorios."
+    echo "  git clone     Descarga un repositorio de GitHub completo."
+    echo -e "${XT_GREEN}======================================================================${RESET}"
+    pausa
+}
 
+# MEGA Instalador de menús externos y herramientas (90 opciones)
+menus_hacker() {
     while true; do
-        local RENDER="\n"
-        for ((y=0; y<ALTO; y++)); do
-            RENDER+="  │"
-            for ((x=0; x<ANCHO; x++)); do RENDER+="${CANVA["$x,$y"]}"; done
-            RENDER+="│\n"
-        done
+        clear
+        echo -e "${XT_GREEN}======================================================================${RESET}"
+        echo -e "${XT_BOLD}             MEGA CATÁLOGO DE HERRAMIENTAS Y RED (90 TOOLS)           ${RESET}"
+        echo -e "${XT_GREEN}======================================================================${RESET}"
+        echo -e "${XT_FG}"
+        echo " [1] Tool-X         [31] Ubuntu-Termux  [61] Wget"
+        echo " [2] Lazymux        [32] Nethunter      [62] Curl"
+        echo " [3] fsociety       [33] Kali-Anonsurf  [63] SQLite3"
+        echo " [4] Onex           [34] Macchanger     [64] Chroot"
+        echo " [5] Hacktronian    [35] Proxychains    [65] Radare2"
+        echo " [6] DarkFly-Tool   [36] BlackEye       [66] GDB"
+        echo " [7] RED_HAWK       [37] Weeman         [67] Binutils"
+        echo " [8] SQLMap         [38] Ghost          [68] Strace"
+        echo " [9] Zphisher       [39] Sherlock       [69] Ltrace"
+        echo " [10] Nmap          [40] Xerosploit     [70] Python"
+        echo " [11] Metasploit    [41] SEToolkit      [71] Ruby"
+        echo " [12] Routersploit  [42] Tor            [72] Perl"
+        echo " [13] Seeker        [43] Htop           [73] NodeJS"
+        echo " [14] HiddenEye     [44] Neofetch       [74] PHP"
+        echo " [15] Shellphish    [45] Cmatrix        [75] Clang"
+        echo " [16] TBomb         [46] Wifite         [76] Make"
+        echo " [17] UserRecon     [47] Aircrack-ng    [77] CMake"
+        echo " [18] OSIF          [48] Tshark         [78] Git"
+        echo " [19] Cupp          [49] Gobuster       [79] Nano"
+        echo " [20] Hydra         [50] Dirb           [80] Vim"
+        echo " [21] Hashcat       [51] Netcat         [81] Neovim"
+        echo " [22] John          [52] Tcpdump        [82] Zip"
+        echo " [23] Nikto         [53] Masscan        [83] Unzip"
+        echo " [24] WPScan        [54] Amass          [84] Tar"
+        echo " [25] XSSer         [55] Sublist3r      [85] Unrar"
+        echo " [26] D-TECT        [56] TheHarvester   [86] SSH"
+        echo " [27] AndroBugs     [57] Recon-ng       [87] Rsync"
+        echo " [28] Apktool       [58] Tmux           [88] OpenSSL"
+        echo " [29] TheFatRat     [59] Ranger         [89] W3m (Navegador)"
+        echo " [30] Termux-Alpine [60] MC (Midnight)  [90] Lynx (Navegador)"
+        echo ""
+        echo " [0] VOLVER AL MENÚ PRINCIPAL"
+        echo -e "${XT_GREEN}======================================================================${RESET}"
+        echo -n -e "C:\LUPINTOOL\HERRAMIENTAS> "
+        read -r menu_opt
 
-        OPCION=$($DIALOG_CMD --title "Lupintool Paint [$PINCEL]" \
-            --menu "Lienzo de Dibujo ASCII ($ANCHO x $ALTO):\n$RENDER" 22 65 7 \
-            "1" "Pintar Punto (Coordenadas X Y)" \
-            "2" "Cambiar Carácter de Pincel" \
-            "3" "Borrador (Espacio en blanco)" \
-            "4" "Limpiar Lienzo Completo" \
-            "5" "Guardar Dibujo ($ARCHIVO_DIBUJO)" \
-            "6" "Ver Dibujo en Pantalla" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1)
-                COORD=$($DIALOG_CMD --title "Pintar" --inputbox "Coordenadas X e Y separadas por espacio (Ej: 5 3):" 10 55 3>&1 1>&2 2>&3)
-                if [ -n "$COORD" ]; then
-                    read -r px py <<< "$COORD"
-                    if [[ "$px" =~ ^[0-9]+$ ]] && [[ "$py" =~ ^[0-9]+$ ]] && [ "$px" -lt "$ANCHO" ] && [ "$py" -lt "$ALTO" ]; then
-                        CANVA["$px,$py"]="$PINCEL"
-                    fi
-                fi
-                ;;
-            2)
-                NUEVO_PINCEL=$($DIALOG_CMD --title "Pincel" --inputbox "Ingresá un símbolo (Ej: █, #, *, @, O, +):" 9 50 3>&1 1>&2 2>&3)
-                [ -n "$NUEVO_PINCEL" ] && PINCEL="${NUEVO_PINCEL:0:1}"
-                ;;
-            3) PINCEL=" " ;;
-            4) limpiar_lienzo ;;
-            5)
-                echo "--- DIBUJO LUPINTOOL ---" > "$ARCHIVO_DIBUJO"
-                for ((y=0; y<ALTO; y++)); do
-                    LINEA=""
-                    for ((x=0; x<ANCHO; x++)); do LINEA+="${CANVA["$x,$y"]}"; done
-                    echo "$LINEA" >> "$ARCHIVO_DIBUJO"
-                done
-                $DIALOG_CMD --title "Guardado" --msgbox "Dibujo guardado en:\n$ARCHIVO_DIBUJO" 8 50
-                ;;
-            6)
-                clear
-                echo "=========================================="
-                echo "          VISTA PREVIA DEL DIBUJO         "
-                echo "=========================================="
-                for ((y=0; y<ALTO; y++)); do
-                    LINEA=""
-                    for ((x=0; x<ANCHO; x++)); do LINEA+="${CANVA["$x,$y"]}"; done
-                    echo "│$LINEA│"
-                done
-                echo "=========================================="
-                read -p "Presioná Enter para continuar..."
-                ;;
-            0|*) break ;;
+        case $menu_opt in
+            1) instalar_repo "Tool-X" "https://github.com/Rajkumrdusad/Tool-X.git" ;;
+            2) instalar_repo "Lazymux" "https://github.com/Gameye98/Lazymux.git" ;;
+            3) instalar_repo "fsociety" "https://github.com/Manisso/fsociety.git" ;;
+            4) instalar_repo "Onex" "https://github.com/rajkumardusad/onex.git" ;;
+            5) instalar_repo "Hacktronian" "https://github.com/thehackingsage/hacktronian.git" ;;
+            6) instalar_repo "DarkFly-Tool" "https://github.com/Ranginang67/DarkFly-Tool.git" ;;
+            7) instalar_repo "RED_HAWK" "https://github.com/Tuhinshubhra/RED_HAWK.git" ;;
+            8) apt install sqlmap -y; pausa ;;
+            9) instalar_repo "Zphisher" "https://github.com/htr-tech/zphisher.git" ;;
+            10) apt install nmap -y; pausa ;;
+            11) apt install metasploit -y; pausa ;;
+            12) instalar_repo "Routersploit" "https://github.com/threat9/routersploit.git" ;;
+            13) instalar_repo "Seeker" "https://github.com/thewhiteh4t/seeker.git" ;;
+            14) instalar_repo "HiddenEye" "https://github.com/DarkSecDevelopers/HiddenEye.git" ;;
+            15) instalar_repo "Shellphish" "https://github.com/thelinuxchoice/shellphish.git" ;;
+            16) instalar_repo "TBomb" "https://github.com/TheSpeedX/TBomb.git" ;;
+            17) instalar_repo "UserRecon" "https://github.com/thelinuxchoice/userrecon.git" ;;
+            18) instalar_repo "OSIF" "https://github.com/ciku370/OSIF.git" ;;
+            19) instalar_repo "Cupp" "https://github.com/Mebus/cupp.git" ;;
+            20) apt install hydra -y; pausa ;;
+            21) apt install hashcat -y; pausa ;;
+            22) apt install john -y; pausa ;;
+            23) apt install nikto -y; pausa ;;
+            24) apt install wpscan -y; pausa ;;
+            25) apt install xsser -y; pausa ;;
+            26) instalar_repo "D-TECT" "https://github.com/shawarkhanethicalhacker/D-TECT.git" ;;
+            27) instalar_repo "AndroBugs" "https://github.com/AndroBugs/AndroBugs_Framework.git" ;;
+            28) apt install apktool -y; pausa ;;
+            29) instalar_repo "TheFatRat" "https://github.com/Screetsec/TheFatRat.git" ;;
+            30) instalar_repo "Termux-Alpine" "https://github.com/Hax4us/TermuxAlpine.git" ;;
+            31) instalar_repo "Ubuntu-in-Termux" "https://github.com/MFDGaming/ubuntu-in-termux.git" ;;
+            32) instalar_repo "Nethunter" "https://github.com/Hax4us/Nethunter-In-Termux.git" ;;
+            33) instalar_repo "Kali-Anonsurf" "https://github.com/UndeadSec/kali-anonsurf.git" ;;
+            34) apt install macchanger -y; pausa ;;
+            35) apt install proxychains-ng -y; pausa ;;
+            36) instalar_repo "BlackEye" "https://github.com/thelinuxchoice/blackeye.git" ;;
+            37) instalar_repo "Weeman" "https://github.com/evait-security/weeman.git" ;;
+            38) instalar_repo "Ghost" "https://github.com/EntySec/Ghost.git" ;;
+            39) instalar_repo "Sherlock" "https://github.com/sherlock-project/sherlock.git" ;;
+            40) instalar_repo "Xerosploit" "https://github.com/LionSec/xerosploit.git" ;;
+            41) instalar_repo "SEToolkit" "https://github.com/trustedsec/social-engineer-toolkit.git" ;;
+            42) apt install tor -y; pausa ;;
+            43) apt install htop -y; pausa ;;
+            44) apt install neofetch -y; pausa ;;
+            45) apt install cmatrix -y; pausa ;;
+            46) apt install wifite -y; pausa ;;
+            47) apt install aircrack-ng -y; pausa ;;
+            48) apt install tshark -y; pausa ;;
+            49) apt install gobuster -y; pausa ;;
+            50) apt install dirb -y; pausa ;;
+            51) apt install netcat -y; pausa ;;
+            52) apt install tcpdump -y; pausa ;;
+            53) apt install masscan -y; pausa ;;
+            54) apt install amass -y; pausa ;;
+            55) apt install sublist3r -y; pausa ;;
+            56) apt install theharvester -y; pausa ;;
+            57) apt install recon-ng -y; pausa ;;
+            58) apt install tmux -y; pausa ;;
+            59) apt install ranger -y; pausa ;;
+            60) apt install mc -y; pausa ;;
+            61) apt install wget -y; pausa ;;
+            62) apt install curl -y; pausa ;;
+            63) apt install sqlite -y; pausa ;;
+            64) apt install chroot -y; pausa ;;
+            65) apt install radare2 -y; pausa ;;
+            66) apt install gdb -y; pausa ;;
+            67) apt install binutils -y; pausa ;;
+            68) apt install strace -y; pausa ;;
+            69) apt install ltrace -y; pausa ;;
+            70) apt install python -y; pausa ;;
+            71) apt install ruby -y; pausa ;;
+            72) apt install perl -y; pausa ;;
+            73) apt install nodejs -y; pausa ;;
+            74) apt install php -y; pausa ;;
+            75) apt install clang -y; pausa ;;
+            76) apt install make -y; pausa ;;
+            77) apt install cmake -y; pausa ;;
+            78) apt install git -y; pausa ;;
+            79) apt install nano -y; pausa ;;
+            80) apt install vim -y; pausa ;;
+            81) apt install neovim -y; pausa ;;
+            82) apt install zip -y; pausa ;;
+            83) apt install unzip -y; pausa ;;
+            84) apt install tar -y; pausa ;;
+            85) apt install unrar -y; pausa ;;
+            86) apt install openssh -y; pausa ;;
+            87) apt install rsync -y; pausa ;;
+            88) apt install openssl -y; pausa ;;
+            89) apt install w3m -y; pausa ;;
+            90) apt install lynx -y; pausa ;;
+            0) break ;;
+            *) echo -e "${XT_FG}Opción inválida.${RESET}"; sleep 1 ;;
         esac
     done
 }
 
-# ====================================================
-# MENÚ 1: JUEGOS Y ARCADE CLI
-# ====================================================
+# MEGA Instalador de juegos de terminal (45 opciones)
 menu_juegos() {
     while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Arcade y Juegos CLI" \
-            --menu "Seleccioná un juego del catálogo:" 22 75 15 \
-            "1" "[INSTALAR] Bastet (Tetris Difícil)" \
-            "2" "[ABRIR] Bastet" \
-            "3" "[INSTALAR] NInvaders (Space Invaders)" \
-            "4" "[ABRIR] NInvaders" \
-            "5" "[INSTALAR] Pacman4console (Pacman Arcade)" \
-            "6" "[ABRIR] Pacman4console" \
-            "7" "[INSTALAR] Moon Buggy (Conducir en la Luna)" \
-            "8" "[ABRIR] Moon Buggy" \
-            "9" "[INSTALAR] Greed (Estrategia Numérica)" \
-            "10" "[ABRIR] Greed" \
-            "11" "[INSTALAR] NSnake (Juego Viborita Clásico)" \
-            "12" "[ABRIR] NSnake" \
-            "13" "[INSTALAR] 2048-cli (Juego Numérico 2048)" \
-            "14" "[ABRIR] 2048-cli" \
-            "15" "[INSTALAR] Nudoku (Sudoku CLI)" \
-            "16" "[ABRIR] Nudoku" \
-            "17" "[INSTALAR] BSD Games (Suite de 40+ Juegos Clásicos)" \
-            "18" "[ABRIR] BSD Games (Number)" \
-            "19" "[INSTALAR] NetHack (RPG / Roguelike Clásico)" \
-            "20" "[ABRIR] NetHack" \
-            "21" "[INSTALAR] Angband (Dungeon Crawler Roguelike)" \
-            "22" "[ABRIR] Angband" \
-            "23" "[INSTALAR] Robotfindskitten (Aventura de Texto)" \
-            "24" "[ABRIR] Robotfindskitten" \
-            "25" "[INSTALAR] OpenAdventure (Colossal Cave Adventure)" \
-            "26" "[ABRIR] OpenAdventure" \
-            "27" "[INSTALAR] MyMan (Clon Ncurses de Pac-Man)" \
-            "28" "[ABRIR] MyMan" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
+        clear
+        echo -e "${XT_GREEN}======================================================================${RESET}"
+        echo -e "${XT_BOLD}               CATÁLOGO DE JUEGOS Y ARTE ASCII (45 ITEMS)             ${RESET}"
+        echo -e "${XT_GREEN}======================================================================${RESET}"
+        echo -e "${XT_FG}"
+        echo " [1] nSnake (Viborita)   [16] MyMan (Pacman+) [31] Fortune (Frases)"
+        echo " [2] nInvaders (Naves)   [17] BSDGames        [32] Cowsay (Vaca)"
+        echo " [3] Pacman4Console      [18] Cavez of Phear  [33] SL (Tren ASCII)"
+        echo " [4] Moon-Buggy          [19] Ascii-Patrol    [34] Figlet (Letras)"
+        echo " [5] GNU Chess           [20] Dwarf Fortress  [35] Toilet (Letras 2)"
+        echo " [6] Typespeed           [21] Frotz (Text)    [36] Cava (Audio EQ)"
+        echo " [7] ASCII-Jump          [22] Angband         [37] Nyancat"
+        echo " [8] Nudoku (Sudoku)     [23] Brogue          [38] BB (Demo ASCII)"
+        echo " [9] Bastet (Tetris)     [24] Cataclysm-DDA   [39] Pipes.sh"
+        echo " [10] Nethack            [25] Crawl           [40] CBonsai"
+        echo " [11] 2048-cli           [26] Dopewars        [41] Asciiquarium"
+        echo " [12] Sudoku             [27] Empire          [42] Hollywood"
+        echo " [13] Tty-Solitaire      [28] Moria           [43] TTY-Clock"
+        echo " [14] Vitetris           [29] SlashEM         [44] Neo (Matrix 2)"
+        echo " [15] Greed              [30] Tome            [45] Cmatrix"
+        echo ""
+        echo " [0] VOLVER AL MENÚ PRINCIPAL"
+        echo -e "${XT_GREEN}======================================================================${RESET}"
+        echo -n -e "C:\LUPINTOOL\JUEGOS> "
+        read -r game_opt
 
-        case $OPCION in
-            1) instalar_paquete "bastet" "bastet" ;;
-            2) ejecutar_programa "bastet" bastet ;;
-            3) instalar_paquete "ninvaders" "ninvaders" ;;
-            4) ejecutar_programa "ninvaders" ninvaders ;;
-            5) instalar_paquete "pacman4console" "pacman4console" ;;
-            6) ejecutar_programa "pacman4console" pacman4console ;;
-            7) instalar_paquete "moon-buggy" "moon-buggy" ;;
-            8) ejecutar_programa "moon-buggy" moon-buggy ;;
-            9) instalar_paquete "greed" "greed" ;;
-            10) ejecutar_programa "greed" greed ;;
-            11) instalar_paquete "nsnake" "nsnake" ;;
-            12) ejecutar_programa "nsnake" nsnake ;;
-            13) instalar_paquete "2048" "2048-cli" ;;
-            14) ejecutar_programa "2048" 2048 ;;
-            15) instalar_paquete "nudoku" "nudoku" ;;
-            16) ejecutar_programa "nudoku" nudoku ;;
-            17) instalar_paquete "number" "bsdgames" ;;
-            18) ejecutar_programa "number" number 1234 ;;
-            19) instalar_paquete "nethack" "nethack-console" ;;
-            20) ejecutar_programa "nethack" nethack ;;
-            21) instalar_paquete "angband" "angband" ;;
-            22) ejecutar_programa "angband" angband ;;
-            23) instalar_paquete "robotfindskitten" "robotfindskitten" ;;
-            24) ejecutar_programa "robotfindskitten" robotfindskitten ;;
-            25) instalar_paquete "openadventure" "openadventure" ;;
-            26) ejecutar_programa "openadventure" openadventure ;;
-            27) instalar_paquete "myman" "myman" ;;
-            28) ejecutar_programa "myman" myman ;;
-            0|*) break ;;
+        case $game_opt in
+            1) apt install nsnake -y; pausa ;;
+            2) apt install ninvaders -y; pausa ;;
+            3) apt install pacman4console -y; pausa ;;
+            4) apt install moon-buggy -y; pausa ;;
+            5) apt install gnuchess -y; pausa ;;
+            6) apt install typespeed -y; pausa ;;
+            7) apt install asciijump -y; pausa ;;
+            8) apt install nudoku -y; pausa ;;
+            9) apt install bastet -y; pausa ;;
+            10) apt install nethack-console -y; pausa ;;
+            11) apt install 2048-cli -y; pausa ;;
+            12) apt install sudoku -y; pausa ;;
+            13) apt install ttysolitaire -y; pausa ;;
+            14) apt install vitetris -y; pausa ;;
+            15) apt install greed -y; pausa ;;
+            16) apt install myman -y; pausa ;;
+            17) apt install bsdgames -y; pausa ;;
+            18) apt install cavez-of-phear -y; pausa ;;
+            19) snap install ascii-patrol; pausa ;;
+            20) apt install dwarffortress -y; pausa ;;
+            21) apt install frotz -y; pausa ;;
+            22) apt install angband -y; pausa ;;
+            23) apt install brogue -y; pausa ;;
+            24) apt install cataclysm-dda-curses -y; pausa ;;
+            25) apt install crawl -y; pausa ;;
+            26) apt install dopewars -y; pausa ;;
+            27) apt install empire -y; pausa ;;
+            28) apt install moria -y; pausa ;;
+            29) apt install slashem -y; pausa ;;
+            30) apt install tome -y; pausa ;;
+            31) apt install fortune -y; pausa ;;
+            32) apt install cowsay -y; pausa ;;
+            33) apt install sl -y; pausa ;;
+            34) apt install figlet -y; pausa ;;
+            35) apt install toilet -y; pausa ;;
+            36) apt install cava -y; pausa ;;
+            37) apt install nyancat -y; pausa ;;
+            38) apt install bb -y; pausa ;;
+            39) apt install pipes-sh -y; pausa ;;
+            40) apt install cbonsai -y; pausa ;;
+            41) apt install asciiquarium -y; pausa ;;
+            42) apt install hollywood -y; pausa ;;
+            43) apt install tty-clock -y; pausa ;;
+            44) apt install libaa-bin -y; pausa ;;
+            45) apt install cmatrix -y; pausa ;;
+            0) break ;;
+            *) echo -e "${XT_FG}Opción inválida.${RESET}"; sleep 1 ;;
         esac
     done
 }
 
-# ====================================================
-# MENÚ 2: EFECTOS VISUALES Y ARTE ASCII
-# ====================================================
-menu_efectos() {
-    while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Efectos Visuales y Arte ASCII" \
-            --menu "Seleccioná un efecto o generador:" 22 75 15 \
-            "1" "[INSTALAR] CMatrix (Lluvia de Código Matrix)" \
-            "2" "[ABRIR] CMatrix" \
-            "3" "[INSTALAR] CBonsai (Generador de Arbolito Bonsái)" \
-            "4" "[ABRIR] CBonsai" \
-            "5" "[INSTALAR] SL (Animación de Tren a Vapor)" \
-            "6" "[ABRIR] SL" \
-            "7" "[INSTALAR] Cowsay & Fortune (Vaca Parlante con Frases)" \
-            "8" "[ABRIR] Cowsay & Fortune" \
-            "9" "[INSTALAR] Hollywood (Pantalla Hacker Multiventana)" \
-            "10" "[ABRIR] Hollywood" \
-            "11" "[INSTALAR] Nyan Cat (Gato Nyan Animado con Música)" \
-            "12" "[ABRIR] Nyan Cat" \
-            "13" "[INSTALAR] Pipes.sh (Tuberías Animadas 3D)" \
-            "14" "[ABRIR] Pipes.sh" \
-            "15" "[INSTALAR] TTY-Clock (Reloj Digital Gigante)" \
-            "16" "[ABRIR] TTY-Clock" \
-            "17" "[INSTALAR] Aafire (Simulador de Fuego ASCII)" \
-            "18" "[ABRIR] Aafire" \
-            "19" "[INSTALAR] Chafa (Renderizador de Fotos y GIFs)" \
-            "20" "[ABRIR] Chafa" \
-            "21" "[INSTALAR] Caca-Utils (Aafire, Cacaview, Cacafire)" \
-            "22" "[ABRIR] Cacafire" \
-            "23" "[INSTALAR] MapSCII (Mapa Mundial Interactivo Vectorial)" \
-            "24" "[ABRIR] MapSCII" \
-            "25" "[INSTALAR] Peaclock (Reloj y Temporizador Elegante)" \
-            "26" "[ABRIR] Peaclock" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1) instalar_paquete "cmatrix" "cmatrix" ;;
-            2) ejecutar_programa "cmatrix" cmatrix ;;
-            3) instalar_paquete "cbonsai" "cbonsai" ;;
-            4) ejecutar_programa "cbonsai" cbonsai -l ;;
-            5) instalar_paquete "sl" "sl" ;;
-            6) ejecutar_programa "sl" sl ;;
-            7) instalar_paquete "cowsay" "cowsay fortune" ;;
-            8) clear; fortune | cowsay; read -p "Enter para continuar..." ;;
-            9) instalar_paquete "hollywood" "hollywood" ;;
-            10) ejecutar_programa "hollywood" hollywood ;;
-            11) instalar_paquete "nyancat" "nyancat" ;;
-            12) ejecutar_programa "nyancat" nyancat ;;
-            13) instalar_paquete "pipes.sh" "pipes" ;;
-            14) ejecutar_programa "pipes.sh" pipes.sh ;;
-            15) instalar_paquete "tty-clock" "tty-clock" ;;
-            16) ejecutar_programa "tty-clock" tty-clock -c ;;
-            17) instalar_paquete "aafire" "libaa-bin" ;;
-            18) ejecutar_programa "aafire" aafire ;;
-            19) instalar_paquete "chafa" "chafa" ;;
-            20) 
-                clear
-                read -p "Ingresá la ruta de la imagen/GIF: " RUTA_IMG
-                chafa "$RUTA_IMG"
-                read -p "Presioná Enter para continuar..."
-                ;;
-            21) instalar_paquete "cacafire" "caca-utils" ;;
-            22) ejecutar_programa "cacafire" cacafire ;;
-            23) instalar_paquete "mapscii" "mapscii" ;;
-            24) ejecutar_programa "mapscii" mapscii ;;
-            25) instalar_paquete "peaclock" "peaclock" ;;
-            26) ejecutar_programa "peaclock" peaclock ;;
-            0|*) break ;;
-        esac
-    done
-}
-
-# ====================================================
-# MENÚ 3: MULTIMEDIA, AUDIO Y EDICIÓN
-# ====================================================
-menu_multimedia() {
-    while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Audio, Video y Edición" \
-            --menu "Seleccioná una herramienta multimedia:" 22 75 15 \
-            "1" "[INSTALAR] FFmpeg (Procesador de Video y Audio)" \
-            "2" "[ABRIR] FFmpeg" \
-            "3" "[INSTALAR] Yt-Dlp (Descargador de Videos YouTube)" \
-            "4" "[ABRIR] Yt-Dlp" \
-            "5" "[INSTALAR] Cmus (Reproductor de Música en Consola)" \
-            "6" "[ABRIR] Cmus" \
-            "7" "[INSTALAR] MPV (Reproductor Multimedia)" \
-            "8" "[ABRIR] MPV" \
-            "9" "[INSTALAR] ImageMagick (Convertidor/Editor de Fotos)" \
-            "10" "[ABRIR] ImageMagick" \
-            "11" "[INSTALAR] FIGlet (Banners de Texto ASCII)" \
-            "12" "[ABRIR] FIGlet" \
-            "13" "[INSTALAR] TOIlet (Banners ASCII en Colores)" \
-            "14" "[ABRIR] TOIlet" \
-            "15" "[INSTALAR] MediaInfo (Analizador de Metadatos)" \
-            "16" "[ABRIR] MediaInfo" \
-            "17" "[INSTALAR] SoX (Editor y Grabador de Audio CLI)" \
-            "18" "[ABRIR] SoX" \
-            "19" "[INSTALAR] CAVA (Visualizador de Audio en Consola)" \
-            "20" "[ABRIR] CAVA" \
-            "21" "[INSTALAR] Ncmpcpp (Cliente de Música MPD)" \
-            "22" "[ABRIR] Ncmpcpp" \
-            "23" "[INSTALAR] Gifsicle (Creador y Editor de GIFs)" \
-            "24" "[ABRIR] Gifsicle" \
-            "25" "[INSTALAR] ExifTool (Lector de Metadatos EXIF)" \
-            "26" "[ABRIR] ExifTool" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1) instalar_paquete "ffmpeg" "ffmpeg" ;;
-            2) ejecutar_programa "ffmpeg" ffmpeg -version ;;
-            3) instalar_paquete "yt-dlp" "yt-dlp" ;;
-            4) ejecutar_programa "yt-dlp" yt-dlp --help ;;
-            5) instalar_paquete "cmus" "cmus" ;;
-            6) ejecutar_programa "cmus" cmus ;;
-            7) instalar_paquete "mpv" "mpv" ;;
-            8) ejecutar_programa "mpv" mpv --help ;;
-            9) instalar_paquete "convert" "imagemagick" ;;
-            10) ejecutar_programa "convert" convert -version ;;
-            11) instalar_paquete "figlet" "figlet" ;;
-            12) ejecutar_programa "figlet" figlet Lupintool ;;
-            13) instalar_paquete "toilet" "toilet" ;;
-            14) ejecutar_programa "toilet" toilet -f mono12 Lupintool ;;
-            15) instalar_paquete "mediainfo" "mediainfo" ;;
-            16) ejecutar_programa "mediainfo" mediainfo --help ;;
-            17) instalar_paquete "sox" "sox" ;;
-            18) ejecutar_programa "sox" sox --help ;;
-            19) instalar_paquete "cava" "cava" ;;
-            20) ejecutar_programa "cava" cava ;;
-            21) instalar_paquete "ncmpcpp" "ncmpcpp" ;;
-            22) ejecutar_programa "ncmpcpp" ncmpcpp ;;
-            23) instalar_paquete "gifsicle" "gifsicle" ;;
-            24) ejecutar_programa "gifsicle" gifsicle --help ;;
-            25) instalar_paquete "exiftool" "libimage-exiftool-perl" ;;
-            26) ejecutar_programa "exiftool" exiftool -v ;;
-            0|*) break ;;
-        esac
-    done
-}
-
-# ====================================================
-# MENÚ 4: REDES, SERVIDORES Y INTERNET
-# ====================================================
-menu_redes() {
-    while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Redes, Servidores y Web" \
-            --menu "Seleccioná una herramienta de red:" 22 75 15 \
-            "1" "[INSTALAR] OpenSSH (Cliente y Servidor SSH)" \
-            "2" "[ABRIR] OpenSSH" \
-            "3" "[INSTALAR] Nmap (Escáner de Puertos y Redes)" \
-            "4" "[ABRIR] Nmap" \
-            "5" "[INSTALAR] Curl (Transferencia de Datos por HTTP/FTP)" \
-            "6" "[ABRIR] Curl" \
-            "7" "[INSTALAR] Wget (Descargador de Archivos Web)" \
-            "8" "[ABRIR] Wget" \
-            "9" "[INSTALAR] Speedtest-cli (Medidor de Velocidad)" \
-            "10" "[ABRIR] Speedtest-cli" \
-            "11" "[INSTALAR] W3M (Navegador Web en Consola)" \
-            "12" "[ABRIR] W3M" \
-            "13" "[INSTALAR] Lynx (Navegador Web Textual)" \
-            "14" "[ABRIR] Lynx" \
-            "15" "[INSTALAR] Netcat (Conector TCP/UDP multipropósito)" \
-            "16" "[ABRIR] Netcat" \
-            "17" "[INSTALAR] Aria2 (Descargador Multihilo Acelerado)" \
-            "18" "[ABRIR] Aria2" \
-            "19" "[INSTALAR] Iperf3 (Auditor de Ancho de Banda)" \
-            "20" "[ABRIR] Iperf3" \
-            "21" "[INSTALAR] Tcpdump (Capturador de Paquetes de Red)" \
-            "22" "[ABRIR] Tcpdump" \
-            "23" "[INSTALAR] MTR (Traceroute y Ping Continuo)" \
-            "24" "[ABRIR] MTR" \
-            "25" "[INSTALAR] RSync (Sincronización Rápida de Archivos)" \
-            "26" "[ABRIR] RSync" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1) instalar_paquete "ssh" "openssh" ;;
-            2) ejecutar_programa "ssh" ssh ;;
-            3) instalar_paquete "nmap" "nmap" ;;
-            4) ejecutar_programa "nmap" nmap --help ;;
-            5) instalar_paquete "curl" "curl" ;;
-            6) ejecutar_programa "curl" curl --help ;;
-            7) instalar_paquete "wget" "wget" ;;
-            8) ejecutar_programa "wget" wget --help ;;
-            9) instalar_paquete "speedtest-cli" "speedtest-cli" ;;
-            10) ejecutar_programa "speedtest-cli" speedtest-cli ;;
-            11) instalar_paquete "w3m" "w3m" ;;
-            12) ejecutar_programa "w3m" w3m https://duckduckgo.com ;;
-            13) instalar_paquete "lynx" "lynx" ;;
-            14) ejecutar_programa "lynx" lynx https://duckduckgo.com ;;
-            15) instalar_paquete "nc" "netcat-openbsd" ;;
-            16) ejecutar_programa "nc" nc -h ;;
-            17) instalar_paquete "aria2c" "aria2" ;;
-            18) ejecutar_programa "aria2c" aria2c --help ;;
-            19) instalar_paquete "iperf3" "iperf3" ;;
-            20) ejecutar_programa "iperf3" iperf3 --help ;;
-            21) instalar_paquete "tcpdump" "tcpdump" ;;
-            22) ejecutar_programa "tcpdump" tcpdump --help ;;
-            23) instalar_paquete "mtr" "mtr" ;;
-            24) ejecutar_programa "mtr" mtr --help ;;
-            25) instalar_paquete "rsync" "rsync" ;;
-            26) ejecutar_programa "rsync" rsync --help ;;
-            0|*) break ;;
-        esac
-    done
-}
-
-# ====================================================
-# MENÚ 5: SISTEMA, ARCHIVOS Y EDITORES
-# ====================================================
-menu_sistema() {
-    while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Sistema, Archivos y Editores" \
-            --menu "Seleccioná una utilidad de sistema:" 22 75 15 \
-            "1" "[INSTALAR] Htop (Monitor Interactivos de Procesos)" \
-            "2" "[ABRIR] Htop" \
-            "3" "[INSTALAR] Btop (Monitor Futurista de Recursos)" \
-            "4" "[ABRIR] Btop" \
-            "5" "[INSTALAR] Fastfetch (Resumen de Especificaciones)" \
-            "6" "[ABRIR] Fastfetch" \
-            "7" "[INSTALAR] Tmux (Multiplexor de Pantallas de Consola)" \
-            "8" "[ABRIR] Tmux" \
-            "9" "[INSTALAR] Micro (Editor de Texto Moderno e Intuitivo)" \
-            "10" "[ABRIR] Micro" \
-            "11" "[INSTALAR] Vim (Editor de Texto Avanzado)" \
-            "12" "[ABRIR] Vim" \
-            "13" "[INSTALAR] Ncdu (Analizador Visivo de Espacio en Disco)" \
-            "14" "[ABRIR] Ncdu" \
-            "15" "[INSTALAR] Ranger (Navegador de Archivos en Columnas)" \
-            "16" "[ABRIR] Ranger" \
-            "17" "[INSTALAR] Midnight Commander (Gestor de Archivos MC)" \
-            "18" "[ABRIR] Midnight Commander" \
-            "19" "[INSTALAR] Fzf (Buscador Difuso Ultra Rápido)" \
-            "20" "[ABRIR] Fzf" \
-            "21" "[INSTALAR] Bat (Cat Mejorado con Colores y Formato)" \
-            "22" "[ABRIR] Bat" \
-            "23" "[INSTALAR] Tree (Visualizador de Árbol de Directorios)" \
-            "24" "[ABRIR] Tree" \
-            "25" "[INSTALAR] Ripgrep (Buscador Rápido dentro de Archivos)" \
-            "26" "[ABRIR] Ripgrep" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1) instalar_paquete "htop" "htop" ;;
-            2) ejecutar_programa "htop" htop ;;
-            3) instalar_paquete "btop" "btop" ;;
-            4) ejecutar_programa "btop" btop ;;
-            5) instalar_paquete "fastfetch" "fastfetch" ;;
-            6) ejecutar_programa "fastfetch" fastfetch ;;
-            7) instalar_paquete "tmux" "tmux" ;;
-            8) ejecutar_programa "tmux" tmux ;;
-            9) instalar_paquete "micro" "micro" ;;
-            10) ejecutar_programa "micro" micro ;;
-            11) instalar_paquete "vim" "vim" ;;
-            12) ejecutar_programa "vim" vim ;;
-            13) instalar_paquete "ncdu" "ncdu" ;;
-            14) ejecutar_programa "ncdu" ncdu ;;
-            15) instalar_paquete "ranger" "ranger" ;;
-            16) ejecutar_programa "ranger" ranger ;;
-            17) instalar_paquete "mc" "mc" ;;
-            18) ejecutar_programa "mc" mc ;;
-            19) instalar_paquete "fzf" "fzf" ;;
-            20) ejecutar_programa "fzf" fzf ;;
-            21) instalar_paquete "bat" "bat" ;;
-            22) ejecutar_programa "bat" bat --help ;;
-            23) instalar_paquete "tree" "tree" ;;
-            24) ejecutar_programa "tree" tree ;;
-            25) instalar_paquete "rg" "ripgrep" ;;
-            26) ejecutar_programa "rg" rg --help ;;
-            0|*) break ;;
-        esac
-    done
-}
-
-# ====================================================
-# MENÚ 6: CIBERSEGURIDAD Y HACKING ÉTICO
-# ====================================================
-menu_seguridad() {
-    while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Ciberseguridad y Hacking" \
-            --menu "Seleccioná una herramienta de seguridad:" 22 75 15 \
-            "1" "[INSTALAR] Nikto (Escáner de Vulnerabilidades Web)" \
-            "2" "[ABRIR] Nikto" \
-            "3" "[INSTALAR] SQLMap (Auditoría e Inyección SQL)" \
-            "4" "[ABRIR] SQLMap" \
-            "5" "[INSTALAR] Hydra (Auditoría de Credenciales por Red)" \
-            "6" "[ABRIR] Hydra" \
-            "7" "[INSTALAR] John the Ripper (Crackeador de Hashes)" \
-            "8" "[ABRIR] John the Ripper" \
-            "9" "[INSTALAR] Gobuster (Escáner de Directorios y Subdominios)" \
-            "10" "[ABRIR] Gobuster" \
-            "11" "[INSTALAR] Metasploit (Framework de Pentesting)" \
-            "12" "[ABRIR] Metasploit" \
-            "13" "[INSTALAR] Aircrack-ng (Auditoría de Redes WiFi)" \
-            "14" "[ABRIR] Aircrack-ng" \
-            "15" "[INSTALAR] Hashcat (Recuperación Rápida de Hashes)" \
-            "16" "[ABRIR] Hashcat" \
-            "17" "[INSTALAR] Radare2 (Ingeniería Inversa y Desensamblador)" \
-            "18" "[ABRIR] Radare2" \
-            "19" "[INSTALAR] Searchsploit (Base de Datos de Exploits)" \
-            "20" "[ABRIR] Searchsploit" \
-            "21" "[INSTALAR] Dirb (Buscador Web de Directorios Ocultos)" \
-            "22" "[ABRIR] Dirb" \
-            "23" "[INSTALAR] Crunch (Generador de Diccionarios de Claves)" \
-            "24" "[ABRIR] Crunch" \
-            "25" "[INSTALAR] Macchanger (Modificador de Dirección MAC)" \
-            "26" "[ABRIR] Macchanger" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1) instalar_paquete "nikto" "nikto" ;;
-            2) ejecutar_programa "nikto" nikto -h ;;
-            3) instalar_paquete "sqlmap" "sqlmap" ;;
-            4) ejecutar_programa "sqlmap" sqlmap -h ;;
-            5) instalar_paquete "hydra" "hydra" ;;
-            6) ejecutar_programa "hydra" hydra -h ;;
-            7) instalar_paquete "john" "john" ;;
-            8) ejecutar_programa "john" john ;;
-            9) instalar_paquete "gobuster" "gobuster" ;;
-            10) ejecutar_programa "gobuster" gobuster -h ;;
-            11) instalar_paquete "msfconsole" "metasploit-framework" ;;
-            12) ejecutar_programa "msfconsole" msfconsole ;;
-            13) instalar_paquete "aircrack-ng" "aircrack-ng" ;;
-            14) ejecutar_programa "aircrack-ng" aircrack-ng --help ;;
-            15) instalar_paquete "hashcat" "hashcat" ;;
-            16) ejecutar_programa "hashcat" hashcat --help ;;
-            17) instalar_paquete "r2" "radare2" ;;
-            18) ejecutar_programa "r2" r2 -h ;;
-            19) instalar_paquete "searchsploit" "exploitdb" ;;
-            20) ejecutar_programa "searchsploit" searchsploit ;;
-            21) instalar_paquete "dirb" "dirb" ;;
-            22) ejecutar_programa "dirb" dirb ;;
-            23) instalar_paquete "crunch" "crunch" ;;
-            24) ejecutar_programa "crunch" crunch ;;
-            25) instalar_paquete "macchanger" "macchanger" ;;
-            26) ejecutar_programa "macchanger" macchanger --help ;;
-            0|*) break ;;
-        esac
-    done
-}
-
-# ====================================================
-# MENÚ 7: MANTENIMIENTO, CLAVES Y CRIPTO
-# ====================================================
-menu_mantenimiento() {
-    while true; do
-        OPCION=$($DIALOG_CMD --title "Lupintool - Mantenimiento y Utilidades" \
-            --menu "Seleccioná una acción de soporte:" 20 70 10 \
-            "1" "Limpiar Caché y Paquetes Obsoletos del Sistema" \
-            "2" "Generador de Contraseñas Seguras (16 Caracteres)" \
-            "3" "Generador de Contraseñas Seguras (32 Caracteres)" \
-            "4" "Generador de Hashes (MD5, SHA1, SHA256)" \
-            "5" "Auditoría de Almacenamiento en Disco (df -h)" \
-            "6" "Monitoreo de Memoria RAM en Tiempo Real" \
-            "7" "Visor de Procesos en Ejecución (ps aux)" \
-            "8" "Cifrar un Archivo con Contraseña (OpenSSL AES-256)" \
-            "9" "Descifrar un Archivo (OpenSSL AES-256)" \
-            "0" "<< Volver al Menú Principal" \
-            3>&1 1>&2 2>&3)
-
-        case $OPCION in
-            1)
-                clear
-                echo "=========================================="
-                echo " Limpiando caché y paquetes viejos..."
-                echo "=========================================="
-                if command -v apt &> /dev/null; then sudo apt autoremove -y && sudo apt clean
-                elif command -v pkg &> /dev/null; then pkg clean
-                elif command -v pacman &> /dev/null; then sudo pacman -Sc --noconfirm; fi
-                read -p "Limpieza finalizada. Presioná Enter..."
-                ;;
-            2)
-                PASS=$(tr -dc 'A-Za-z0-9!@#$%^&*()' < /dev/urandom | head -c 16)
-                $DIALOG_CMD --title "Clave Generada (16)" --msgbox "\n Tu contraseña segura:\n\n $PASS" 9 55
-                ;;
-            3)
-                PASS=$(tr -dc 'A-Za-z0-9!@#$%^&*()' < /dev/urandom | head -c 32)
-                $DIALOG_CMD --title "Clave Generada (32)" --msgbox "\n Tu contraseña larga:\n\n $PASS" 9 60
-                ;;
-            4)
-                TEXTO=$($DIALOG_CMD --title "Generador Hash" --inputbox "Ingresá el texto a procesar:" 9 50 3>&1 1>&2 2>&3)
-                if [ -n "$TEXTO" ]; then
-                    H_MD5=$(echo -n "$TEXTO" | md5sum | awk '{print $1}')
-                    H_SHA1=$(echo -n "$TEXTO" | sha1sum | awk '{print $1}')
-                    H_SHA256=$(echo -n "$TEXTO" | sha256sum | awk '{print $1}')
-                    $DIALOG_CMD --title "Resultados Hash" --msgbox "MD5:\n$H_MD5\n\nSHA1:\n$H_SHA1\n\nSHA256:\n$H_SHA256" 14 65
-                fi
-                ;;
-            5) clear; df -h; echo ""; read -p "Presioná Enter para continuar..." ;;
-            6) clear; free -h -s 1 ;;
-            7) clear; ps aux | head -n 30; echo ""; read -p "Presioná Enter..." ;;
-            8)
-                clear
-                read -p "Ruta del archivo a cifrar: " RUTA_ORIG
-                if [ -f "$RUTA_ORIG" ]; then
-                    openssl enc -aes-256-cbc -salt -in "$RUTA_ORIG" -out "$RUTA_ORIG.enc"
-                    echo "¡Archivo cifrado generado: $RUTA_ORIG.enc!"
-                else
-                    echo "El archivo no existe."
-                fi
-                read -p "Presioná Enter..."
-                ;;
-            9)
-                clear
-                read -p "Ruta del archivo .enc a descifrar: " RUTA_ENC
-                if [ -f "$RUTA_ENC" ]; then
-                    openssl enc -d -aes-256-cbc -in "$RUTA_ENC" -out "${RUTA_ENC%.enc}_restaurado"
-                    echo "¡Archivo descifrado con éxito!"
-                else
-                    echo "El archivo no existe."
-                fi
-                read -p "Presioná Enter..."
-                ;;
-            0|*) break ;;
-        esac
-    done
-}
-
-# ====================================================
-# MENÚ PRINCIPAL
-# ====================================================
+# Bucle principal del menú
 while true; do
-    CATEGORIA=$($DIALOG_CMD --title "=== LUPINTOOL v6.0 MEGA CATALOG ===" \
-        --menu "Seleccioná una categoría para explorar sus herramientas:" 20 70 9 \
-        "1" "🎮 Juegos CLI y Arcade (Tetris, Pacman, NetHack, Sudoku)" \
-        "2" "✨ Efectos Visuales y Arte ASCII (Matrix, Bonsái, Chafa)" \
-        "3" "🎵 Audio, Video y Multimedia (FFmpeg, Yt-Dlp, MPV)" \
-        "4" "🌐 Redes, Servidores y Web (SSH, Nmap, Curl, Speedtest)" \
-        "5" "💻 Sistema, Archivos y Editores (Htop, Btop, Micro, Vim)" \
-        "6" "🛡️ Ciberseguridad y Hacking (Nikto, SQLMap, Hydra, John)" \
-        "7" "🛠️ Mantenimiento, Claves y Criptografía" \
-        "8" "🎨 Paint CLI (Lienzo Interactivo de Dibujo)" \
-        "0" "❌ Salir de Lupintool" \
-        3>&1 1>&2 2>&3)
+    clear
+    echo -e "${XT_BG}${XT_GREEN}"
+    echo " ╔══════════════════════════════════════════════════════════════════════╗ "
+    echo " ║                                                                      ║ "
+    echo " ║        L U P I N T O O L   V 6 . 0   ( E D I C I Ó N   X T )         ║ "
+    echo " ║                                                                      ║ "
+    echo " ╠══════════════════════════════════════════════════════════════════════╣ "
+    echo " ║                                                                      ║ "
+    echo " ║  [1] Mega Gestor de Hacking, Redes & Dev (90 Herramientas)           ║ "
+    echo " ║  [2] Mega Catálogo de Juegos Retro & ASCII (45 Archivos)             ║ "
+    echo " ║  [3] Manual de Comandos del Sistema                                  ║ "
+    echo " ║  [4] Salir a DOS / Bash                                              ║ "
+    echo " ║                                                                      ║ "
+    echo " ╚══════════════════════════════════════════════════════════════════════╝ "
+    echo -e "${XT_FG}"
+    echo -n "C:\LUPINTOOL> "
+    
+    read -r main_opt
 
-    case $CATEGORIA in
-        1) menu_juegos ;;
-        2) menu_efectos ;;
-        3) menu_multimedia ;;
-        4) menu_redes ;;
-        5) menu_sistema ;;
-        6) menu_seguridad ;;
-        7) menu_mantenimiento ;;
-        8) modo_paint ;;
-        0|*) clear; echo "¡Gracias por usar Lupintool v6.0 Mega Catalog!"; exit 0 ;;
+    case $main_opt in
+        1) menus_hacker ;;
+        2) menu_juegos ;;
+        3) glosario_comandos ;;
+        4) 
+            echo -e "\n${XT_GREEN}Cerrando sesión de Lupintool...${RESET}\n"
+            exit 0
+            ;;
+        *) 
+            echo -e "\n${XT_FG}Comando erróneo. Intente nuevamente.${RESET}"
+            sleep 1
+            ;;
     esac
 done
-EOF
