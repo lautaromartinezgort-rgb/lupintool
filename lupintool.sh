@@ -1,238 +1,229 @@
 #!/bin/bash
 
-# Colores estilo Windows 98 (Fondo Azul, Texto Blanco, Resaltado Amarillo)
-W98_BG="\e[44m"
-W98_FG="\e[37m"
-W98_HL="\e[1;33m"
-W98_TITLE="\e[1;37m"
+# Colores y estilo "3D" Neón (Texto verde brillante sobre negro)
+XT_BG="\e[40m"
+XT_FG="\e[37m"
+XT_GREEN="\e[1;32m" # Verde brillante
+XT_BOLD="\e[1m"
 RESET="\e[0m"
 
 # Función para pausar
 pausa() {
-    echo -e "\n${W98_HL}Presione [ENTER] para volver al menú...${RESET}"
+    echo -e "\n${XT_FG}Presione [ENTER] para volver al menú...${RESET}"
     read -r
 }
 
 # Función inteligente para descargar repositorios
 instalar_repo() {
-    echo -e "\n${W98_HL}>>> Descargando $1...${RESET}"
+    echo -e "\n${XT_GREEN}>>> Descargando $1...${RESET}"
     git clone "$2"
-    echo -e "${W98_FG}>>> ¡$1 descargado! Busca la carpeta con 'ls'.${RESET}"
+    echo -e "${XT_FG}>>> ¡$1 descargado! Busca la carpeta con 'ls'.${RESET}"
     pausa
 }
 
 # Diccionario de comandos
 glosario_comandos() {
     clear
-    echo -e "${W98_BG}${W98_FG}"
-    echo "+-----------------------------------------+"
-    echo -e "|${W98_TITLE}     MANUAL DE COMANDOS DEL SISTEMA      ${W98_FG}|"
-    echo "+-----------------------------------------+"
-    echo " ls           Lista archivos."
-    echo " cd [ruta]    Cambia de directorio."
-    echo " rm -rf [d]   Borra carpeta y contenido."
-    echo " chmod +x     Da permisos de ejecución."
-    echo " dpkg -i      Instala un .deb local."
-    echo " apt search   Busca en repositorios."
-    echo " git clone    Descarga de GitHub."
-    echo "+-----------------------------------------+"
+    echo -e "${XT_BG}${XT_GREEN}"
+    echo " ╔════════════════════════════════════════╗ "
+    echo " ║     MANUAL DE COMANDOS DEL SISTEMA     ║ "
+    echo " ╠════════════════════════════════════════╣ "
+    echo -e " ║ ${XT_FG}ls${XT_GREEN}         Lista archivos.             ║ "
+    echo -e " ║ ${XT_FG}cd [ruta]${XT_GREEN}  Cambia de directorio.       ║ "
+    echo -e " ║ ${XT_FG}rm -rf [d]${XT_GREEN} Borra carpeta y contenido.  ║ "
+    echo -e " ║ ${XT_FG}chmod +x${XT_GREEN}   Da permisos de ejecución.   ║ "
+    echo -e " ║ ${XT_FG}dpkg -i${XT_GREEN}    Instala un .deb local.      ║ "
+    echo -e " ║ ${XT_FG}apt search${XT_GREEN} Busca en repositorios.      ║ "
+    echo -e " ║ ${XT_FG}git clone${XT_GREEN}  Descarga de GitHub.         ║ "
+    echo " ╚════════════════════════════════════════╝ "
     pausa
 }
 
-# Menú de Hack & Red (90 opciones en 2 columnas angostas)
-menus_hacker() {
+# APARTADO 1: Solo Menús y Frameworks (30 opciones)
+apartado_menus() {
     while true; do
         clear
-        echo -e "${W98_BG}${W98_FG}"
-        echo "+-----------------------------------------+"
-        echo -e "|${W98_TITLE}   GESTOR DE HACKING & RED (90 TOOLS)    ${W98_FG}|"
-        echo "+-----------------------------------------+"
-        echo " [1] Tool-X          [46] Wifite"
-        echo " [2] Lazymux         [47] Aircrack-ng"
-        echo " [3] fsociety        [48] Tshark"
-        echo " [4] Onex            [49] Gobuster"
-        echo " [5] Hacktronian     [50] Dirb"
-        echo " [6] DarkFly-Tool    [51] Netcat"
-        echo " [7] RED_HAWK        [52] Tcpdump"
-        echo " [8] SQLMap          [53] Masscan"
-        echo " [9] Zphisher        [54] Amass"
-        echo " [10] Nmap           [55] Sublist3r"
-        echo " [11] Metasploit     [56] TheHarvester"
-        echo " [12] Routersploit   [57] Recon-ng"
-        echo " [13] Seeker         [58] Tmux"
-        echo " [14] HiddenEye      [59] Ranger"
-        echo " [15] Shellphish     [60] MC"
-        echo " [16] TBomb          [61] Wget"
-        echo " [17] UserRecon      [62] Curl"
-        echo " [18] OSIF           [63] SQLite3"
-        echo " [19] Cupp           [64] Chroot"
-        echo " [20] Hydra          [65] Radare2"
-        echo " [21] Hashcat        [66] GDB"
-        echo " [22] John           [67] Binutils"
-        echo " [23] Nikto          [68] Strace"
-        echo " [24] WPScan         [69] Ltrace"
-        echo " [25] XSSer          [70] Python"
-        echo " [26] D-TECT         [71] Ruby"
-        echo " [27] AndroBugs      [72] Perl"
-        echo " [28] Apktool        [73] NodeJS"
-        echo " [29] TheFatRat      [74] PHP"
-        echo " [30] Termux-Alpine  [75] Clang"
-        echo " [31] Ubuntu-Termux  [76] Make"
-        echo " [32] Nethunter      [77] CMake"
-        echo " [33] Kali-Anonsurf  [78] Git"
-        echo " [34] Macchanger     [79] Nano"
-        echo " [35] Proxychains    [80] Vim"
-        echo " [36] BlackEye       [81] Neovim"
-        echo " [37] Weeman         [82] Zip"
-        echo " [38] Ghost          [83] Unzip"
-        echo " [39] Sherlock       [84] Tar"
-        echo " [40] Xerosploit     [85] Unrar"
-        echo " [41] SEToolkit      [86] SSH"
-        echo " [42] Tor            [87] Rsync"
-        echo " [43] Htop           [88] OpenSSL"
-        echo " [44] Neofetch       [89] W3m"
-        echo " [45] Cmatrix        [90] Lynx"
-        echo ""
-        echo -e " ${W98_HL}[0] VOLVER AL MENÚ PRINCIPAL${W98_FG}"
-        echo "+-----------------------------------------+"
-        echo -n -e "C:\> "
-        read -r menu_opt
+        echo -e "${XT_BG}${XT_GREEN}"
+        echo " ╔════════════════════════════════════════╗ "
+        echo " ║    APARTADO DE MENÚS Y FRAMEWORKS      ║ "
+        echo " ╠════════════════════════════════════════╣ "
+        echo -e " ║ ${XT_FG}[1] Tool-X         [16] BlackEye       ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[2] Lazymux        [17] Weeman         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[3] fsociety       [18] Ghost          ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[4] Onex           [19] Sherlock       ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[5] Hacktronian    [20] Xerosploit     ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[6] DarkFly-Tool   [21] SEToolkit      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[7] RED_HAWK       [22] D-TECT         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[8] Zphisher       [23] AndroBugs      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[9] Routersploit   [24] TheFatRat      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[10] Seeker        [25] Termux-Alpine  ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[11] HiddenEye     [26] Ubuntu-Termux  ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[12] Shellphish    [27] Nethunter      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[13] TBomb         [28] Kali-Anonsurf  ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[14] UserRecon     [29] Metasploit     ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[15] OSIF          [30] Cupp           ${XT_GREEN}║ "
+        echo " ╠════════════════════════════════════════╣ "
+        echo -e " ║ ${XT_FG}[0] VOLVER AL MENÚ PRINCIPAL           ${XT_GREEN}║ "
+        echo " ╚════════════════════════════════════════╝ "
+        echo -e "${XT_FG}"
+        echo -n "LUPINTOOL/MENUS> "
+        read -r opt
 
-        case $menu_opt in
+        case $opt in
             1) instalar_repo "Tool-X" "https://github.com/Rajkumrdusad/Tool-X.git" ;;
             2) instalar_repo "Lazymux" "https://github.com/Gameye98/Lazymux.git" ;;
             3) instalar_repo "fsociety" "https://github.com/Manisso/fsociety.git" ;;
             4) instalar_repo "Onex" "https://github.com/rajkumardusad/onex.git" ;;
             5) instalar_repo "Hacktronian" "https://github.com/thehackingsage/hacktronian.git" ;;
-            6) instalar_repo "DarkFly-Tool" "https://github.com/Ranginang67/DarkFly-Tool.git" ;;
+            6) instalar_repo "DarkFly" "https://github.com/Ranginang67/DarkFly-Tool.git" ;;
             7) instalar_repo "RED_HAWK" "https://github.com/Tuhinshubhra/RED_HAWK.git" ;;
-            8) apt install sqlmap -y; pausa ;;
-            9) instalar_repo "Zphisher" "https://github.com/htr-tech/zphisher.git" ;;
-            10) apt install nmap -y; pausa ;;
-            11) apt install metasploit -y; pausa ;;
-            12) instalar_repo "Routersploit" "https://github.com/threat9/routersploit.git" ;;
-            13) instalar_repo "Seeker" "https://github.com/thewhiteh4t/seeker.git" ;;
-            14) instalar_repo "HiddenEye" "https://github.com/DarkSecDevelopers/HiddenEye.git" ;;
-            15) instalar_repo "Shellphish" "https://github.com/thelinuxchoice/shellphish.git" ;;
-            16) instalar_repo "TBomb" "https://github.com/TheSpeedX/TBomb.git" ;;
-            17) instalar_repo "UserRecon" "https://github.com/thelinuxchoice/userrecon.git" ;;
-            18) instalar_repo "OSIF" "https://github.com/ciku370/OSIF.git" ;;
-            19) instalar_repo "Cupp" "https://github.com/Mebus/cupp.git" ;;
-            20) apt install hydra -y; pausa ;;
-            21) apt install hashcat -y; pausa ;;
-            22) apt install john -y; pausa ;;
-            23) apt install nikto -y; pausa ;;
-            24) apt install wpscan -y; pausa ;;
-            25) apt install xsser -y; pausa ;;
-            26) instalar_repo "D-TECT" "https://github.com/shawarkhanethicalhacker/D-TECT.git" ;;
-            27) instalar_repo "AndroBugs" "https://github.com/AndroBugs/AndroBugs_Framework.git" ;;
-            28) apt install apktool -y; pausa ;;
-            29) instalar_repo "TheFatRat" "https://github.com/Screetsec/TheFatRat.git" ;;
-            30) instalar_repo "Termux-Alpine" "https://github.com/Hax4us/TermuxAlpine.git" ;;
-            31) instalar_repo "Ubuntu-in-Termux" "https://github.com/MFDGaming/ubuntu-in-termux.git" ;;
-            32) instalar_repo "Nethunter" "https://github.com/Hax4us/Nethunter-In-Termux.git" ;;
-            33) instalar_repo "Kali-Anonsurf" "https://github.com/UndeadSec/kali-anonsurf.git" ;;
-            34) apt install macchanger -y; pausa ;;
-            35) apt install proxychains-ng -y; pausa ;;
-            36) instalar_repo "BlackEye" "https://github.com/thelinuxchoice/blackeye.git" ;;
-            37) instalar_repo "Weeman" "https://github.com/evait-security/weeman.git" ;;
-            38) instalar_repo "Ghost" "https://github.com/EntySec/Ghost.git" ;;
-            39) instalar_repo "Sherlock" "https://github.com/sherlock-project/sherlock.git" ;;
-            40) instalar_repo "Xerosploit" "https://github.com/LionSec/xerosploit.git" ;;
-            41) instalar_repo "SEToolkit" "https://github.com/trustedsec/social-engineer-toolkit.git" ;;
-            42) apt install tor -y; pausa ;;
-            43) apt install htop -y; pausa ;;
-            44) apt install neofetch -y; pausa ;;
-            45) apt install cmatrix -y; pausa ;;
-            46) apt install wifite -y; pausa ;;
-            47) apt install aircrack-ng -y; pausa ;;
-            48) apt install tshark -y; pausa ;;
-            49) apt install gobuster -y; pausa ;;
-            50) apt install dirb -y; pausa ;;
-            51) apt install netcat -y; pausa ;;
-            52) apt install tcpdump -y; pausa ;;
-            53) apt install masscan -y; pausa ;;
-            54) apt install amass -y; pausa ;;
-            55) apt install sublist3r -y; pausa ;;
-            56) apt install theharvester -y; pausa ;;
-            57) apt install recon-ng -y; pausa ;;
-            58) apt install tmux -y; pausa ;;
-            59) apt install ranger -y; pausa ;;
-            60) apt install mc -y; pausa ;;
-            61) apt install wget -y; pausa ;;
-            62) apt install curl -y; pausa ;;
-            63) apt install sqlite -y; pausa ;;
-            64) apt install chroot -y; pausa ;;
-            65) apt install radare2 -y; pausa ;;
-            66) apt install gdb -y; pausa ;;
-            67) apt install binutils -y; pausa ;;
-            68) apt install strace -y; pausa ;;
-            69) apt install ltrace -y; pausa ;;
-            70) apt install python -y; pausa ;;
-            71) apt install ruby -y; pausa ;;
-            72) apt install perl -y; pausa ;;
-            73) apt install nodejs -y; pausa ;;
-            74) apt install php -y; pausa ;;
-            75) apt install clang -y; pausa ;;
-            76) apt install make -y; pausa ;;
-            77) apt install cmake -y; pausa ;;
-            78) apt install git -y; pausa ;;
-            79) apt install nano -y; pausa ;;
-            80) apt install vim -y; pausa ;;
-            81) apt install neovim -y; pausa ;;
-            82) apt install zip -y; pausa ;;
-            83) apt install unzip -y; pausa ;;
-            84) apt install tar -y; pausa ;;
-            85) apt install unrar -y; pausa ;;
-            86) apt install openssh -y; pausa ;;
-            87) apt install rsync -y; pausa ;;
-            88) apt install openssl -y; pausa ;;
-            89) apt install w3m -y; pausa ;;
-            90) apt install lynx -y; pausa ;;
+            8) instalar_repo "Zphisher" "https://github.com/htr-tech/zphisher.git" ;;
+            9) instalar_repo "Routersploit" "https://github.com/threat9/routersploit.git" ;;
+            10) instalar_repo "Seeker" "https://github.com/thewhiteh4t/seeker.git" ;;
+            11) instalar_repo "HiddenEye" "https://github.com/DarkSecDevelopers/HiddenEye.git" ;;
+            12) instalar_repo "Shellphish" "https://github.com/thelinuxchoice/shellphish.git" ;;
+            13) instalar_repo "TBomb" "https://github.com/TheSpeedX/TBomb.git" ;;
+            14) instalar_repo "UserRecon" "https://github.com/thelinuxchoice/userrecon.git" ;;
+            15) instalar_repo "OSIF" "https://github.com/ciku370/OSIF.git" ;;
+            16) instalar_repo "BlackEye" "https://github.com/thelinuxchoice/blackeye.git" ;;
+            17) instalar_repo "Weeman" "https://github.com/evait-security/weeman.git" ;;
+            18) instalar_repo "Ghost" "https://github.com/EntySec/Ghost.git" ;;
+            19) instalar_repo "Sherlock" "https://github.com/sherlock-project/sherlock.git" ;;
+            20) instalar_repo "Xerosploit" "https://github.com/LionSec/xerosploit.git" ;;
+            21) instalar_repo "SEToolkit" "https://github.com/trustedsec/social-engineer-toolkit.git" ;;
+            22) instalar_repo "D-TECT" "https://github.com/shawarkhanethicalhacker/D-TECT.git" ;;
+            23) instalar_repo "AndroBugs" "https://github.com/AndroBugs/AndroBugs_Framework.git" ;;
+            24) instalar_repo "TheFatRat" "https://github.com/Screetsec/TheFatRat.git" ;;
+            25) instalar_repo "Termux-Alpine" "https://github.com/Hax4us/TermuxAlpine.git" ;;
+            26) instalar_repo "Ubuntu-Termux" "https://github.com/MFDGaming/ubuntu-in-termux.git" ;;
+            27) instalar_repo "Nethunter" "https://github.com/Hax4us/Nethunter-In-Termux.git" ;;
+            28) instalar_repo "Kali-Anonsurf" "https://github.com/UndeadSec/kali-anonsurf.git" ;;
+            29) apt install metasploit -y; pausa ;;
+            30) instalar_repo "Cupp" "https://github.com/Mebus/cupp.git" ;;
             0) break ;;
             *) echo -e "Opción inválida."; sleep 1 ;;
         esac
     done
 }
 
-# Menú de Juegos (45 opciones en 2 columnas angostas)
-menu_juegos() {
+# APARTADO 2: Herramientas Individuales (40 opciones)
+apartado_herramientas() {
     while true; do
         clear
-        echo -e "${W98_BG}${W98_FG}"
-        echo "+-----------------------------------------+"
-        echo -e "|${W98_TITLE}       JUEGOS RETRO & ASCII (45)         ${W98_FG}|"
-        echo "+-----------------------------------------+"
-        echo " [1] nSnake          [24] Cataclysm"
-        echo " [2] nInvaders       [25] Crawl"
-        echo " [3] Pacman4Console  [26] Dopewars"
-        echo " [4] Moon-Buggy      [27] Empire"
-        echo " [5] GNU Chess       [28] Moria"
-        echo " [6] Typespeed       [29] SlashEM"
-        echo " [7] ASCII-Jump      [30] Tome"
-        echo " [8] Nudoku          [31] Fortune"
-        echo " [9] Bastet          [32] Cowsay"
-        echo " [10] Nethack        [33] SL (Tren)"
-        echo " [11] 2048-cli       [34] Figlet"
-        echo " [12] Sudoku         [35] Toilet"
-        echo " [13] Tty-Solitaire  [36] Cava"
-        echo " [14] Vitetris       [37] Nyancat"
-        echo " [15] Greed          [38] BB (Demo)"
-        echo " [16] MyMan          [39] Pipes.sh"
-        echo " [17] BSDGames       [40] CBonsai"
-        echo " [18] Cavez of Phear [41] Asciiquarium"
-        echo " [19] Ascii-Patrol   [42] Hollywood"
-        echo " [20] Dwarf Fortress [43] TTY-Clock"
-        echo " [21] Frotz          [44] Neo (Matrix)"
-        echo " [22] Angband        [45] Cmatrix"
-        echo " [23] Brogue"
-        echo ""
-        echo -e " ${W98_HL}[0] VOLVER AL MENÚ PRINCIPAL${W98_FG}"
-        echo "+-----------------------------------------+"
-        echo -n -e "C:\> "
-        read -r game_opt
+        echo -e "${XT_BG}${XT_GREEN}"
+        echo " ╔════════════════════════════════════════╗ "
+        echo " ║    HERRAMIENTAS DE RED Y PAQUETES      ║ "
+        echo " ╠════════════════════════════════════════╣ "
+        echo -e " ║ ${XT_FG}[1] SQLMap         [21] Netcat         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[2] Nmap           [22] Tcpdump        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[3] Hydra          [23] Masscan        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[4] Hashcat        [24] Amass          ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[5] John Ripper    [25] Sublist3r      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[6] Nikto          [26] TheHarvester   ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[7] WPScan         [27] Recon-ng       ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[8] XSSer          [28] Tmux           ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[9] Apktool        [29] Ranger         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[10] Macchanger    [30] MC (Midnight)  ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[11] Proxychains   [31] SQLite3        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[12] Tor           [32] Chroot         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[13] Htop          [33] Radare2        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[14] Neofetch      [34] GDB            ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[15] Wifite        [35] Python         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[16] Aircrack-ng   [36] NodeJS         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[17] Tshark        [37] Clang          ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[18] Gobuster      [38] Git            ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[19] Dirb          [39] Wget / Curl    ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[20] OpenSSH       [40] Nano / Vim     ${XT_GREEN}║ "
+        echo " ╠════════════════════════════════════════╣ "
+        echo -e " ║ ${XT_FG}[0] VOLVER AL MENÚ PRINCIPAL           ${XT_GREEN}║ "
+        echo " ╚════════════════════════════════════════╝ "
+        echo -e "${XT_FG}"
+        echo -n "LUPINTOOL/TOOLS> "
+        read -r opt
 
-        case $game_opt in
+        case $opt in
+            1) apt install sqlmap -y; pausa ;;
+            2) apt install nmap -y; pausa ;;
+            3) apt install hydra -y; pausa ;;
+            4) apt install hashcat -y; pausa ;;
+            5) apt install john -y; pausa ;;
+            6) apt install nikto -y; pausa ;;
+            7) apt install wpscan -y; pausa ;;
+            8) apt install xsser -y; pausa ;;
+            9) apt install apktool -y; pausa ;;
+            10) apt install macchanger -y; pausa ;;
+            11) apt install proxychains-ng -y; pausa ;;
+            12) apt install tor -y; pausa ;;
+            13) apt install htop -y; pausa ;;
+            14) apt install neofetch -y; pausa ;;
+            15) apt install wifite -y; pausa ;;
+            16) apt install aircrack-ng -y; pausa ;;
+            17) apt install tshark -y; pausa ;;
+            18) apt install gobuster -y; pausa ;;
+            19) apt install dirb -y; pausa ;;
+            20) apt install openssh -y; pausa ;;
+            21) apt install netcat -y; pausa ;;
+            22) apt install tcpdump -y; pausa ;;
+            23) apt install masscan -y; pausa ;;
+            24) apt install amass -y; pausa ;;
+            25) apt install sublist3r -y; pausa ;;
+            26) apt install theharvester -y; pausa ;;
+            27) apt install recon-ng -y; pausa ;;
+            28) apt install tmux -y; pausa ;;
+            29) apt install ranger -y; pausa ;;
+            30) apt install mc -y; pausa ;;
+            31) apt install sqlite -y; pausa ;;
+            32) apt install chroot -y; pausa ;;
+            33) apt install radare2 -y; pausa ;;
+            34) apt install gdb -y; pausa ;;
+            35) apt install python -y; pausa ;;
+            36) apt install nodejs -y; pausa ;;
+            37) apt install clang -y; pausa ;;
+            38) apt install git -y; pausa ;;
+            39) apt install wget curl -y; pausa ;;
+            40) apt install nano vim -y; pausa ;;
+            0) break ;;
+            *) echo -e "Opción inválida."; sleep 1 ;;
+        esac
+    done
+}
+
+# APARTADO 3: Juegos Retro (40 opciones)
+apartado_juegos() {
+    while true; do
+        clear
+        echo -e "${XT_BG}${XT_GREEN}"
+        echo " ╔════════════════════════════════════════╗ "
+        echo " ║     CATÁLOGO DE JUEGOS Y ARTE ASCII    ║ "
+        echo " ╠════════════════════════════════════════╣ "
+        echo -e " ║ ${XT_FG}[1] nSnake         [21] Frotz          ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[2] nInvaders      [22] Angband        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[3] Pacman4Console [23] Brogue         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[4] Moon-Buggy     [24] Cataclysm      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[5] GNU Chess      [25] Crawl          ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[6] Typespeed      [26] Dopewars       ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[7] ASCII-Jump     [27] Empire         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[8] Nudoku         [28] Moria          ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[9] Bastet         [29] SlashEM        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[10] Nethack       [30] Tome           ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[11] 2048-cli      [31] Fortune        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[12] Sudoku        [32] Cowsay         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[13] Tty-Solitaire [33] SL (Tren)      ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[14] Vitetris      [34] Figlet         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[15] Greed         [35] Toilet         ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[16] MyMan         [36] Nyancat        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[17] BSDGames      [37] Pipes.sh       ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[18] Cavez Phear   [38] CBonsai        ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[19] Dwarf Fort.   [39] Asciiquarium   ${XT_GREEN}║ "
+        echo -e " ║ ${XT_FG}[20] Cmatrix       [40] Hollywood      ${XT_GREEN}║ "
+        echo " ╠════════════════════════════════════════╣ "
+        echo -e " ║ ${XT_FG}[0] VOLVER AL MENÚ PRINCIPAL           ${XT_GREEN}║ "
+        echo " ╚════════════════════════════════════════╝ "
+        echo -e "${XT_FG}"
+        echo -n "LUPINTOOL/JUEGOS> "
+        read -r opt
+
+        case $opt in
             1) apt install nsnake -y; pausa ;;
             2) apt install ninvaders -y; pausa ;;
             3) apt install pacman4console -y; pausa ;;
@@ -251,8 +242,8 @@ menu_juegos() {
             16) apt install myman -y; pausa ;;
             17) apt install bsdgames -y; pausa ;;
             18) apt install cavez-of-phear -y; pausa ;;
-            19) snap install ascii-patrol; pausa ;;
-            20) apt install dwarffortress -y; pausa ;;
+            19) apt install dwarffortress -y; pausa ;;
+            20) apt install cmatrix -y; pausa ;;
             21) apt install frotz -y; pausa ;;
             22) apt install angband -y; pausa ;;
             23) apt install brogue -y; pausa ;;
@@ -268,16 +259,11 @@ menu_juegos() {
             33) apt install sl -y; pausa ;;
             34) apt install figlet -y; pausa ;;
             35) apt install toilet -y; pausa ;;
-            36) apt install cava -y; pausa ;;
-            37) apt install nyancat -y; pausa ;;
-            38) apt install bb -y; pausa ;;
-            39) apt install pipes-sh -y; pausa ;;
-            40) apt install cbonsai -y; pausa ;;
-            41) apt install asciiquarium -y; pausa ;;
-            42) apt install hollywood -y; pausa ;;
-            43) apt install tty-clock -y; pausa ;;
-            44) apt install libaa-bin -y; pausa ;;
-            45) apt install cmatrix -y; pausa ;;
+            36) apt install nyancat -y; pausa ;;
+            37) apt install pipes-sh -y; pausa ;;
+            38) apt install cbonsai -y; pausa ;;
+            39) apt install asciiquarium -y; pausa ;;
+            40) apt install hollywood -y; pausa ;;
             0) break ;;
             *) echo -e "Opción inválida."; sleep 1 ;;
         esac
@@ -286,27 +272,33 @@ menu_juegos() {
 
 # Bucle principal del menú
 while true; do
-    echo -e "${W98_BG}${W98_FG}"
     clear
-    echo "+-----------------------------------------+"
-    echo -e "|${W98_TITLE}         L U P I N T O O L V 6.0         ${W98_FG}|"
-    echo -e "|${W98_TITLE}           (Edición Windows 98)          ${W98_FG}|"
-    echo "+-----------------------------------------+"
-    echo "  [1] Gestor de Hacking & Red (90 Tools)   "
-    echo "  [2] Catálogo de Juegos Retro (45 Items)  "
-    echo "  [3] Manual de Comandos                 "
-    echo -e "  ${W98_HL}[4] Salir a la Terminal${W98_FG}                "
-    echo "+-----------------------------------------+"
-    echo -n -e "C:\> "
+    echo -e "${XT_BG}${XT_GREEN}"
+    echo " ╔════════════════════════════════════════╗ "
+    echo " ║                                        ║ "
+    echo -e " ║        ${XT_BOLD}L U P I N T O O L  V6.0${XT_GREEN}         ║ "
+    echo " ║                                        ║ "
+    echo " ╠════════════════════════════════════════╣ "
+    echo " ║                                        ║ "
+    echo -e " ║  ${XT_FG}[1] Gestor de Menús (30 Menús)${XT_GREEN}        ║ "
+    echo -e " ║  ${XT_FG}[2] Herramientas Individuales (40)${XT_GREEN}    ║ "
+    echo -e " ║  ${XT_FG}[3] Juegos Retro y ASCII (40)${XT_GREEN}         ║ "
+    echo -e " ║  ${XT_FG}[4] Manual de Comandos${XT_GREEN}                ║ "
+    echo -e " ║  ${XT_FG}[5] Salir a Termux${XT_GREEN}                    ║ "
+    echo " ║                                        ║ "
+    echo " ╚════════════════════════════════════════╝ "
+    echo -e "${XT_FG}"
+    echo -n "LUPINTOOL> "
     
     read -r main_opt
 
     case $main_opt in
-        1) menus_hacker ;;
-        2) menu_juegos ;;
-        3) glosario_comandos ;;
-        4) 
-            echo -e "\n${W98_HL}Cerrando sesión de Lupintool...${RESET}\n"
+        1) apartado_menus ;;
+        2) apartado_herramientas ;;
+        3) apartado_juegos ;;
+        4) glosario_comandos ;;
+        5) 
+            echo -e "\n${XT_GREEN}Cerrando sesión de Lupintool...${RESET}\n"
             exit 0
             ;;
         *) 
