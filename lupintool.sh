@@ -2,8 +2,8 @@ cat << 'EOF' > lupintool.sh
 #!/bin/bash
 
 # ====================================================
-# LUPINTOOL v6.0 - MEGA CATALOG EDITION
-# Menú interactivo con catálogo masivo de herramientas
+# LUPINTOOL v6.1 - MEGA CATALOG + EXTENSIONES
+# Menú interactivo con catálogo masivo y gestor de extras
 # ====================================================
 
 if command -v pkg &> /dev/null; then
@@ -59,6 +59,63 @@ ejecutar_programa() {
         echo ""
         read -p "Presioná Enter para regresar al menú..."
     fi
+}
+
+# ====================================================
+# NUEVA SECCIÓN: GESTOR Y DESCARGA DE MÁS MENÚS/EXTRAS
+# ====================================================
+menu_descargar_menus() {
+    while true; do
+        OPCION=$($DIALOG_CMD --title "Lupintool - Gestor de Menús Extras" \
+            --menu "Descargá nuevos catálogos o actualizá menús:" 16 70 5 \
+            "1" "Descargar Menú / Script Externo (Por URL directa)" \
+            "2" "Ver Módulos Descargados en Carpeta Personal" \
+            "3" "Ejecutar un Menú o Script Externo Guardado" \
+            "0" "<< Volver al Menú Principal" \
+            3>&1 1>&2 2>&3)
+
+        case $OPCION in
+            1)
+                URL=$($DIALOG_CMD --title "Descargar Menú" --inputbox "Ingresá la URL exacta del script (.sh) que querés descargar:" 10 60 3>&1 1>&2 2>&3)
+                if [ -n "$URL" ]; then
+                    clear
+                    echo "=========================================="
+                    echo " Descargando menú externo..."
+                    echo "=========================================="
+                    NOMBRE_ARCHIVO=$(basename "$URL")
+                    [ -z "$NOMBRE_ARCHIVO" ] || [ "$NOMBRE_ARCHIVO" = "/" ] && NOMBRE_ARCHIVO="menu_extra_$RANDOM.sh"
+                    
+                    curl -sL "$URL" -o "$HOME/$NOMBRE_ARCHIVO"
+                    chmod +x "$HOME/$NOMBRE_ARCHIVO"
+                    
+                    echo ""
+                    echo "¡Descarga finalizada con éxito!"
+                    echo "Guardado en: $HOME/$NOMBRE_ARCHIVO"
+                    read -p "Presioná Enter para continuar..."
+                fi
+                ;;
+            2)
+                clear
+                echo "=========================================="
+                echo " MÓDULOS Y MENÚS EN TU CARPETA PERSONAL: "
+                echo "=========================================="
+                ls -la "$HOME" | grep "\.sh$"
+                echo "=========================================="
+                read -p "Presioná Enter para continuar..."
+                ;;
+            3)
+                SCRIPT_EVAL=$($DIALOG_CMD --title "Ejecutar Script" --inputbox "Ingresá el nombre del archivo guardado en tu HOME (Ej: menu_extra.sh):" 10 60 3>&1 1>&2 2>&3)
+                if [ -n "$SCRIPT_EVAL" ] && [ -f "$HOME/$SCRIPT_EVAL" ]; then
+                    clear
+                    bash "$HOME/$SCRIPT_EVAL"
+                    read -p "Presioná Enter para regresar al menú..."
+                else
+                    $DIALOG_CMD --title "Error" --msgbox "El archivo no existe en tu carpeta principal ($HOME)." 7 55
+                fi
+                ;;
+            0|*) break ;;
+        esac
+    done
 }
 
 # ====================================================
@@ -638,8 +695,8 @@ menu_mantenimiento() {
 # MENÚ PRINCIPAL
 # ====================================================
 while true; do
-    CATEGORIA=$($DIALOG_CMD --title "=== LUPINTOOL v6.0 MEGA CATALOG ===" \
-        --menu "Seleccioná una categoría para explorar sus herramientas:" 20 70 9 \
+    CATEGORIA=$($DIALOG_CMD --title "=== LUPINTOOL v6.1 MEGA CATALOG ===" \
+        --menu "Seleccioná una categoría para explorar sus herramientas:" 22 75 10 \
         "1" "🎮 Juegos CLI y Arcade (Tetris, Pacman, NetHack, Sudoku)" \
         "2" "✨ Efectos Visuales y Arte ASCII (Matrix, Bonsái, Chafa)" \
         "3" "🎵 Audio, Video y Multimedia (FFmpeg, Yt-Dlp, MPV)" \
@@ -648,6 +705,7 @@ while true; do
         "6" "🛡️ Ciberseguridad y Hacking (Nikto, SQLMap, Hydra, John)" \
         "7" "🛠️ Mantenimiento, Claves y Criptografía" \
         "8" "🎨 Paint CLI (Lienzo Interactivo de Dibujo)" \
+        "9" "📥 Descargar / Gestionar Más Menús y Módulos (Extras)" \
         "0" "❌ Salir de Lupintool" \
         3>&1 1>&2 2>&3)
 
@@ -660,7 +718,8 @@ while true; do
         6) menu_seguridad ;;
         7) menu_mantenimiento ;;
         8) modo_paint ;;
-        0|*) clear; echo "¡Gracias por usar Lupintool v6.0 Mega Catalog!"; exit 0 ;;
+        9) menu_descargar_menus ;;
+        0|*) clear; echo "¡Gracias por usar Lupintool v6.1!"; exit 0 ;;
     esac
 done
 EOF
