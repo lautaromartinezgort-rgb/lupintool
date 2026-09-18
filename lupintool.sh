@@ -1,86 +1,101 @@
 #!/bin/bash
 
-# Colores y estilo PC XT (Texto gris/verde sobre fondo negro)
-XT_BG="\e[40m"
-XT_FG="\e[37m"
-XT_GREEN="\e[32m"
-XT_BOLD="\e[1m"
+# Colores estilo Windows 98 (Fondo Azul, Texto Blanco, Resaltado Amarillo)
+W98_BG="\e[44m"
+W98_FG="\e[37m"
+W98_HL="\e[1;33m"
+W98_TITLE="\e[1;37m"
 RESET="\e[0m"
 
 # Función para pausar
 pausa() {
-    echo -e "\n${XT_FG}Presione [ENTER] para volver al menú...${RESET}"
+    echo -e "\n${W98_HL}Presione [ENTER] para volver al menú...${RESET}"
     read -r
 }
 
-# Función inteligente para descargar repositorios de GitHub
+# Función inteligente para descargar repositorios
 instalar_repo() {
-    echo -e "\n${XT_GREEN}>>> Descargando $1...${RESET}"
+    echo -e "\n${W98_HL}>>> Descargando $1...${RESET}"
     git clone "$2"
-    echo -e "${XT_FG}>>> ¡$1 descargado! Busca la carpeta con 'ls'.${RESET}"
+    echo -e "${W98_FG}>>> ¡$1 descargado! Busca la carpeta con 'ls'.${RESET}"
     pausa
 }
 
 # Diccionario de comandos
 glosario_comandos() {
     clear
-    echo -e "${XT_GREEN}======================================================================${RESET}"
-    echo -e "${XT_BOLD}                   MANUAL DE COMANDOS DEL SISTEMA                     ${RESET}"
-    echo -e "${XT_GREEN}======================================================================${RESET}"
-    echo -e "${XT_FG}"
-    echo "  ls            Lista los archivos de la carpeta actual."
-    echo "  cd [ruta]     Cambia de directorio (ej. cd /home)."
-    echo "  rm -rf [dir]  Borra una carpeta entera con su contenido."
-    echo "  chmod +x      Da permisos de ejecución a un script (.sh)."
-    echo "  dpkg -i       Instala un archivo local .deb."
-    echo "  apt search    Busca un paquete en los repositorios."
-    echo "  git clone     Descarga un repositorio de GitHub completo."
-    echo -e "${XT_GREEN}======================================================================${RESET}"
+    echo -e "${W98_BG}${W98_FG}"
+    echo "+-----------------------------------------+"
+    echo -e "|${W98_TITLE}     MANUAL DE COMANDOS DEL SISTEMA      ${W98_FG}|"
+    echo "+-----------------------------------------+"
+    echo " ls           Lista archivos."
+    echo " cd [ruta]    Cambia de directorio."
+    echo " rm -rf [d]   Borra carpeta y contenido."
+    echo " chmod +x     Da permisos de ejecución."
+    echo " dpkg -i      Instala un .deb local."
+    echo " apt search   Busca en repositorios."
+    echo " git clone    Descarga de GitHub."
+    echo "+-----------------------------------------+"
     pausa
 }
 
-# MEGA Instalador de menús externos y herramientas (90 opciones)
+# Menú de Hack & Red (90 opciones en 2 columnas angostas)
 menus_hacker() {
     while true; do
         clear
-        echo -e "${XT_GREEN}======================================================================${RESET}"
-        echo -e "${XT_BOLD}             MEGA CATÁLOGO DE HERRAMIENTAS Y RED (90 TOOLS)           ${RESET}"
-        echo -e "${XT_GREEN}======================================================================${RESET}"
-        echo -e "${XT_FG}"
-        echo " [1] Tool-X         [31] Ubuntu-Termux  [61] Wget"
-        echo " [2] Lazymux        [32] Nethunter      [62] Curl"
-        echo " [3] fsociety       [33] Kali-Anonsurf  [63] SQLite3"
-        echo " [4] Onex           [34] Macchanger     [64] Chroot"
-        echo " [5] Hacktronian    [35] Proxychains    [65] Radare2"
-        echo " [6] DarkFly-Tool   [36] BlackEye       [66] GDB"
-        echo " [7] RED_HAWK       [37] Weeman         [67] Binutils"
-        echo " [8] SQLMap         [38] Ghost          [68] Strace"
-        echo " [9] Zphisher       [39] Sherlock       [69] Ltrace"
-        echo " [10] Nmap          [40] Xerosploit     [70] Python"
-        echo " [11] Metasploit    [41] SEToolkit      [71] Ruby"
-        echo " [12] Routersploit  [42] Tor            [72] Perl"
-        echo " [13] Seeker        [43] Htop           [73] NodeJS"
-        echo " [14] HiddenEye     [44] Neofetch       [74] PHP"
-        echo " [15] Shellphish    [45] Cmatrix        [75] Clang"
-        echo " [16] TBomb         [46] Wifite         [76] Make"
-        echo " [17] UserRecon     [47] Aircrack-ng    [77] CMake"
-        echo " [18] OSIF          [48] Tshark         [78] Git"
-        echo " [19] Cupp          [49] Gobuster       [79] Nano"
-        echo " [20] Hydra         [50] Dirb           [80] Vim"
-        echo " [21] Hashcat       [51] Netcat         [81] Neovim"
-        echo " [22] John          [52] Tcpdump        [82] Zip"
-        echo " [23] Nikto         [53] Masscan        [83] Unzip"
-        echo " [24] WPScan        [54] Amass          [84] Tar"
-        echo " [25] XSSer         [55] Sublist3r      [85] Unrar"
-        echo " [26] D-TECT        [56] TheHarvester   [86] SSH"
-        echo " [27] AndroBugs     [57] Recon-ng       [87] Rsync"
-        echo " [28] Apktool       [58] Tmux           [88] OpenSSL"
-        echo " [29] TheFatRat     [59] Ranger         [89] W3m (Navegador)"
-        echo " [30] Termux-Alpine [60] MC (Midnight)  [90] Lynx (Navegador)"
+        echo -e "${W98_BG}${W98_FG}"
+        echo "+-----------------------------------------+"
+        echo -e "|${W98_TITLE}   GESTOR DE HACKING & RED (90 TOOLS)    ${W98_FG}|"
+        echo "+-----------------------------------------+"
+        echo " [1] Tool-X          [46] Wifite"
+        echo " [2] Lazymux         [47] Aircrack-ng"
+        echo " [3] fsociety        [48] Tshark"
+        echo " [4] Onex            [49] Gobuster"
+        echo " [5] Hacktronian     [50] Dirb"
+        echo " [6] DarkFly-Tool    [51] Netcat"
+        echo " [7] RED_HAWK        [52] Tcpdump"
+        echo " [8] SQLMap          [53] Masscan"
+        echo " [9] Zphisher        [54] Amass"
+        echo " [10] Nmap           [55] Sublist3r"
+        echo " [11] Metasploit     [56] TheHarvester"
+        echo " [12] Routersploit   [57] Recon-ng"
+        echo " [13] Seeker         [58] Tmux"
+        echo " [14] HiddenEye      [59] Ranger"
+        echo " [15] Shellphish     [60] MC"
+        echo " [16] TBomb          [61] Wget"
+        echo " [17] UserRecon      [62] Curl"
+        echo " [18] OSIF           [63] SQLite3"
+        echo " [19] Cupp           [64] Chroot"
+        echo " [20] Hydra          [65] Radare2"
+        echo " [21] Hashcat        [66] GDB"
+        echo " [22] John           [67] Binutils"
+        echo " [23] Nikto          [68] Strace"
+        echo " [24] WPScan         [69] Ltrace"
+        echo " [25] XSSer          [70] Python"
+        echo " [26] D-TECT         [71] Ruby"
+        echo " [27] AndroBugs      [72] Perl"
+        echo " [28] Apktool        [73] NodeJS"
+        echo " [29] TheFatRat      [74] PHP"
+        echo " [30] Termux-Alpine  [75] Clang"
+        echo " [31] Ubuntu-Termux  [76] Make"
+        echo " [32] Nethunter      [77] CMake"
+        echo " [33] Kali-Anonsurf  [78] Git"
+        echo " [34] Macchanger     [79] Nano"
+        echo " [35] Proxychains    [80] Vim"
+        echo " [36] BlackEye       [81] Neovim"
+        echo " [37] Weeman         [82] Zip"
+        echo " [38] Ghost          [83] Unzip"
+        echo " [39] Sherlock       [84] Tar"
+        echo " [40] Xerosploit     [85] Unrar"
+        echo " [41] SEToolkit      [86] SSH"
+        echo " [42] Tor            [87] Rsync"
+        echo " [43] Htop           [88] OpenSSL"
+        echo " [44] Neofetch       [89] W3m"
+        echo " [45] Cmatrix        [90] Lynx"
         echo ""
-        echo " [0] VOLVER AL MENÚ PRINCIPAL"
-        echo -e "${XT_GREEN}======================================================================${RESET}"
-        echo -n -e "C:\LUPINTOOL\HERRAMIENTAS> "
+        echo -e " ${W98_HL}[0] VOLVER AL MENÚ PRINCIPAL${W98_FG}"
+        echo "+-----------------------------------------+"
+        echo -n -e "C:\> "
         read -r menu_opt
 
         case $menu_opt in
@@ -175,38 +190,46 @@ menus_hacker() {
             89) apt install w3m -y; pausa ;;
             90) apt install lynx -y; pausa ;;
             0) break ;;
-            *) echo -e "${XT_FG}Opción inválida.${RESET}"; sleep 1 ;;
+            *) echo -e "Opción inválida."; sleep 1 ;;
         esac
     done
 }
 
-# MEGA Instalador de juegos de terminal (45 opciones)
+# Menú de Juegos (45 opciones en 2 columnas angostas)
 menu_juegos() {
     while true; do
         clear
-        echo -e "${XT_GREEN}======================================================================${RESET}"
-        echo -e "${XT_BOLD}               CATÁLOGO DE JUEGOS Y ARTE ASCII (45 ITEMS)             ${RESET}"
-        echo -e "${XT_GREEN}======================================================================${RESET}"
-        echo -e "${XT_FG}"
-        echo " [1] nSnake (Viborita)   [16] MyMan (Pacman+) [31] Fortune (Frases)"
-        echo " [2] nInvaders (Naves)   [17] BSDGames        [32] Cowsay (Vaca)"
-        echo " [3] Pacman4Console      [18] Cavez of Phear  [33] SL (Tren ASCII)"
-        echo " [4] Moon-Buggy          [19] Ascii-Patrol    [34] Figlet (Letras)"
-        echo " [5] GNU Chess           [20] Dwarf Fortress  [35] Toilet (Letras 2)"
-        echo " [6] Typespeed           [21] Frotz (Text)    [36] Cava (Audio EQ)"
-        echo " [7] ASCII-Jump          [22] Angband         [37] Nyancat"
-        echo " [8] Nudoku (Sudoku)     [23] Brogue          [38] BB (Demo ASCII)"
-        echo " [9] Bastet (Tetris)     [24] Cataclysm-DDA   [39] Pipes.sh"
-        echo " [10] Nethack            [25] Crawl           [40] CBonsai"
-        echo " [11] 2048-cli           [26] Dopewars        [41] Asciiquarium"
-        echo " [12] Sudoku             [27] Empire          [42] Hollywood"
-        echo " [13] Tty-Solitaire      [28] Moria           [43] TTY-Clock"
-        echo " [14] Vitetris           [29] SlashEM         [44] Neo (Matrix 2)"
-        echo " [15] Greed              [30] Tome            [45] Cmatrix"
+        echo -e "${W98_BG}${W98_FG}"
+        echo "+-----------------------------------------+"
+        echo -e "|${W98_TITLE}       JUEGOS RETRO & ASCII (45)         ${W98_FG}|"
+        echo "+-----------------------------------------+"
+        echo " [1] nSnake          [24] Cataclysm"
+        echo " [2] nInvaders       [25] Crawl"
+        echo " [3] Pacman4Console  [26] Dopewars"
+        echo " [4] Moon-Buggy      [27] Empire"
+        echo " [5] GNU Chess       [28] Moria"
+        echo " [6] Typespeed       [29] SlashEM"
+        echo " [7] ASCII-Jump      [30] Tome"
+        echo " [8] Nudoku          [31] Fortune"
+        echo " [9] Bastet          [32] Cowsay"
+        echo " [10] Nethack        [33] SL (Tren)"
+        echo " [11] 2048-cli       [34] Figlet"
+        echo " [12] Sudoku         [35] Toilet"
+        echo " [13] Tty-Solitaire  [36] Cava"
+        echo " [14] Vitetris       [37] Nyancat"
+        echo " [15] Greed          [38] BB (Demo)"
+        echo " [16] MyMan          [39] Pipes.sh"
+        echo " [17] BSDGames       [40] CBonsai"
+        echo " [18] Cavez of Phear [41] Asciiquarium"
+        echo " [19] Ascii-Patrol   [42] Hollywood"
+        echo " [20] Dwarf Fortress [43] TTY-Clock"
+        echo " [21] Frotz          [44] Neo (Matrix)"
+        echo " [22] Angband        [45] Cmatrix"
+        echo " [23] Brogue"
         echo ""
-        echo " [0] VOLVER AL MENÚ PRINCIPAL"
-        echo -e "${XT_GREEN}======================================================================${RESET}"
-        echo -n -e "C:\LUPINTOOL\JUEGOS> "
+        echo -e " ${W98_HL}[0] VOLVER AL MENÚ PRINCIPAL${W98_FG}"
+        echo "+-----------------------------------------+"
+        echo -n -e "C:\> "
         read -r game_opt
 
         case $game_opt in
@@ -256,29 +279,25 @@ menu_juegos() {
             44) apt install libaa-bin -y; pausa ;;
             45) apt install cmatrix -y; pausa ;;
             0) break ;;
-            *) echo -e "${XT_FG}Opción inválida.${RESET}"; sleep 1 ;;
+            *) echo -e "Opción inválida."; sleep 1 ;;
         esac
     done
 }
 
 # Bucle principal del menú
 while true; do
+    echo -e "${W98_BG}${W98_FG}"
     clear
-    echo -e "${XT_BG}${XT_GREEN}"
-    echo " ╔══════════════════════════════════════════════════════════════════════╗ "
-    echo " ║                                                                      ║ "
-    echo " ║        L U P I N T O O L   V 6 . 0   ( E D I C I Ó N   X T )         ║ "
-    echo " ║                                                                      ║ "
-    echo " ╠══════════════════════════════════════════════════════════════════════╣ "
-    echo " ║                                                                      ║ "
-    echo " ║  [1] Mega Gestor de Hacking, Redes & Dev (90 Herramientas)           ║ "
-    echo " ║  [2] Mega Catálogo de Juegos Retro & ASCII (45 Archivos)             ║ "
-    echo " ║  [3] Manual de Comandos del Sistema                                  ║ "
-    echo " ║  [4] Salir a DOS / Bash                                              ║ "
-    echo " ║                                                                      ║ "
-    echo " ╚══════════════════════════════════════════════════════════════════════╝ "
-    echo -e "${XT_FG}"
-    echo -n "C:\LUPINTOOL> "
+    echo "+-----------------------------------------+"
+    echo -e "|${W98_TITLE}         L U P I N T O O L V 6.0         ${W98_FG}|"
+    echo -e "|${W98_TITLE}           (Edición Windows 98)          ${W98_FG}|"
+    echo "+-----------------------------------------+"
+    echo "  [1] Gestor de Hacking & Red (90 Tools)   "
+    echo "  [2] Catálogo de Juegos Retro (45 Items)  "
+    echo "  [3] Manual de Comandos                 "
+    echo -e "  ${W98_HL}[4] Salir a la Terminal${W98_FG}                "
+    echo "+-----------------------------------------+"
+    echo -n -e "C:\> "
     
     read -r main_opt
 
@@ -287,11 +306,11 @@ while true; do
         2) menu_juegos ;;
         3) glosario_comandos ;;
         4) 
-            echo -e "\n${XT_GREEN}Cerrando sesión de Lupintool...${RESET}\n"
+            echo -e "\n${W98_HL}Cerrando sesión de Lupintool...${RESET}\n"
             exit 0
             ;;
         *) 
-            echo -e "\n${XT_FG}Comando erróneo. Intente nuevamente.${RESET}"
+            echo -e "\nComando erróneo. Intente nuevamente."
             sleep 1
             ;;
     esac
