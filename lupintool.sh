@@ -1,4 +1,4 @@
-rm -f lupintool.sh ~/lupintool.sh
+
 
 cat << 'EOF' > lupintool.sh
 #!/bin/bash
